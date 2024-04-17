@@ -442,6 +442,7 @@ GameObject:
   - component: {fileID: 2129927257}
   - component: {fileID: 2129927256}
   - component: {fileID: 2129927255}
+  - component: {fileID: 2129927260}
   m_Layer: 0
   m_Name: Sensor
   m_TagString: Untagged
@@ -461,19 +462,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf2738b38a4f05e419d0b605eed34370, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  accelerometer_unity: {x: 0, y: 0, z: 0}
-  accelerometer_custom: {x: 0, y: 0, z: 0}
-  angle_true: 0
-  axis_true: {x: 0, y: 0, z: 0}
-  angle_1: 0
-  axis_1: {x: 0, y: 0, z: 0}
-  angles_euler_true: {x: 0, y: 0, z: 0}
-  angles_euler_1: {x: 0, y: 0, z: 0}
-  transformUp: {x: 0, y: 0, z: 0}
-  transformUp2: {x: 0, y: 0, z: 0}
-  transformUp3: {x: 0, y: 0, z: 0}
   rotation_true: {x: 0, y: 0, z: 0, w: 0}
-  rotation_1: {x: 0, y: 0, z: 0, w: 0}
+  angles_euler_true: {x: 0, y: 0, z: 0}
+  axis_true: {x: 0, y: 0, z: 0}
+  angle_true: 0
+  transformUp: {x: 0, y: 0, z: 0}
+  accelerometer_unity: {x: 0, y: 0, z: 0}
 --- !u!65 &2129927256
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -553,13 +547,38 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2129927254}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.90175414, y: -0.02434712, z: -0.25306666, w: -0.3495769}
   m_LocalPosition: {x: -1, y: 0, z: 0}
   m_LocalScale: {x: 0.6, y: 1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -140, y: -1045, z: -10}
+--- !u!114 &2129927260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2129927254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 868d8c86653c24149a40e4a876637efb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotation: {x: 0, y: 0, z: 0, w: 0}
+  eulerAngles: {x: 0, y: 0, z: 0}
+  axis: {x: 0, y: 0, z: 0}
+  angle: 0
+  transformUp: {x: 0, y: 0, z: 0}
+  accelerometer: {x: 0, y: 0, z: 0}
+  eulerToQuaternion: {x: 0, y: 0, z: 0, w: 0}
+  eulerToAxis: {x: 0, y: 0, z: 0}
+  eulerToAngle: 0
+  axis2: {x: 0, y: 0, z: 0}
+  angle2: 0
+  rotation2: {x: 0, y: 0, z: 0, w: 0}
+  euler2: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
