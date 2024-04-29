@@ -30,6 +30,8 @@ public class Sensor : MonoBehaviour
 
 
 
+    
+
 
 
     //[SerializeField]
@@ -39,7 +41,7 @@ public class Sensor : MonoBehaviour
     //private float angle_1;
 
 
-
+    
 
 
     

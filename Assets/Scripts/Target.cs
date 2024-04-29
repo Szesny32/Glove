@@ -5,9 +5,8 @@ using UnityEngine;
 public class Target : MonoBehaviour
 {
 
-    public Sensor sensor;
-    public float yaw;
-    private const float sensitivity = 10f;
+    public Tester sensor;
+    public float angle;
 
     void Start()
     {
@@ -26,6 +25,10 @@ public class Target : MonoBehaviour
 
     void EstimateOrientation(){
         if(sensor){
+
+            Vector3 axis = sensor.getUp();
+            transform.rotation = Quaternion.AxisAngle(axis, angle);
+
              //Vector3 accelerometerData = sensor.GetAccelerometer();
             // yaw = sensor.TEST_GetYawRotation();
 
@@ -40,6 +43,8 @@ public class Target : MonoBehaviour
             //Vector3 rotationAxis = Vector3.Cross(upVector, accelerometerData);
            // float rotationAngle = Mathf.Acos(Vector3.Dot(upVector, rotationAxis));
            // transform.rotation = Quaternion.AngleAxis(rotationAngle * Mathf.Rad2Deg, rotationAxis);
+
+
 
         }
     }
