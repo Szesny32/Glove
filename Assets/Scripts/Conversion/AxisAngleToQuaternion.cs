@@ -6,7 +6,7 @@ public class AxisAngleToQuaternion : MonoBehaviour
 {
 
     public Transform source;
-    public bool customMode = true;
+    //public bool customMode = true;
 
     void Start()
     {
@@ -26,7 +26,7 @@ public class AxisAngleToQuaternion : MonoBehaviour
         source.rotation.ToAngleAxis(out angle, out axis);
         Quaternion quaternion = new Quaternion();
 
-        if(customMode){
+        //if(customMode){
             axis.Normalize();
 
             float halfAngle = angle * Mathf.Deg2Rad* 0.5f;
@@ -40,9 +40,9 @@ public class AxisAngleToQuaternion : MonoBehaviour
                 cosHalfAngle
             );
 
-        } else {
-            quaternion = Quaternion.AngleAxis(angle, axis);
-        }
+        //} else {
+        //    quaternion = Quaternion.AngleAxis(angle, axis);
+        //}
 
         transform.rotation = quaternion;
 

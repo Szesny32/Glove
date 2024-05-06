@@ -7,7 +7,7 @@ public class EulerToAxisAngle : MonoBehaviour
     
     [SerializeField]
     private Transform source;
-    public bool customMode = true;
+    //public bool customMode = true;
 
     void Start()
     {
@@ -25,24 +25,24 @@ public class EulerToAxisAngle : MonoBehaviour
         float angle = 0f;
         Vector3 axis = Vector3.zero;
 
-        if(customMode){
+        //if(customMode){
             //Unity performs the Euler rotations sequentially around the z-axis, the x-axis and then the y-axis.
-            float heading = euler.y * Mathf.Deg2Rad * 0.5f;
-            float attitude = euler.z * Mathf.Deg2Rad * 0.5f;
-            float bank = euler.x * Mathf.Deg2Rad * 0.5f;
+            float ey = euler.y * Mathf.Deg2Rad * 0.5f;
+            float ez = euler.z * Mathf.Deg2Rad * 0.5f;
+            float ex = euler.x * Mathf.Deg2Rad * 0.5f;
 
-            float c1 = Mathf.Cos(heading);
-            float c2 = Mathf.Cos(attitude);
-            float c3 = Mathf.Cos(bank);
-            float s1 = Mathf.Sin(heading);
-            float s2 = Mathf.Sin(attitude);
-            float s3 = Mathf.Sin(bank);
+            float cex = Mathf.Cos(ex);
+            float cey = Mathf.Cos(ey);
+            float cez = Mathf.Cos(ez);
+            float sex = Mathf.Sin(ex);
+            float sey = Mathf.Sin(ey);
+            float sez = Mathf.Sin(ez);
 
-            angle = 2 * Mathf.Acos(c1*c2*c3 - s1*s2*s3) * Mathf.Rad2Deg;
+            angle = 2 * Mathf.Acos(cex*cey*cez + sex*sey*sez) * Mathf.Rad2Deg;
             axis = new Vector3(
-                s1*s2*c3 + c1*c2*s3,
-                s1*c2*c3 + c1*s2*s3,
-                c1*s2*c3 - s1*c2*s3
+                sex*cey*cez + cex*sey*sez,
+                cex*sey*cez - sex*cey*sez,
+                cex*cey*sez - sex*sey*cez
             );
 
             float norm = axis.x*axis.x + axis.y*axis.y + axis.z*axis.z;
@@ -56,11 +56,11 @@ public class EulerToAxisAngle : MonoBehaviour
                 axis.y /= norm;
                 axis.z /= norm;
             }
-        }
+        //}
 
-        else {
-            Quaternion.Euler( source.rotation.eulerAngles).ToAngleAxis(out angle, out axis);
-        }
+        //else {
+        //    Quaternion.Euler( source.rotation.eulerAngles).ToAngleAxis(out angle, out axis);
+        //}
 
         transform.rotation = Quaternion.AngleAxis(angle, axis);
 

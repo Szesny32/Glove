@@ -51,10 +51,16 @@ public class QuaternionToEuler : MonoBehaviour
             v.z = 0;
             return NormalizeAngles(v * Mathf.Rad2Deg);
         }
-        Quaternion q = new Quaternion(rotation.w, rotation.z, rotation.x, rotation.y);
-        v.y = (float)Mathf.Atan2(2f * q.x * q.w + 2f * q.y * q.z, 1 - 2f * (q.z * q.z + q.w * q.w));     // Yaw
-        v.x = (float)Mathf.Asin(2f * (q.x * q.z - q.w * q.y));                             // Pitch
-        v.z = (float)Mathf.Atan2(2f * q.x * q.y + 2f * q.z * q.w, 1 - 2f * (q.y * q.y + q.z * q.z));      // Roll
+        // Quaternion q = new Quaternion(rotation.w, rotation.z, rotation.x, rotation.y);
+        // Quaternion rotation = new Quaternion(rotation.x, rotation.y, rotation.z, rotation.w);
+
+        // v.y = (float)Mathf.Atan2(2f * q.x * q.w + 2f * q.y * q.z, 1 - 2f * (q.z * q.z + q.w * q.w));     // Yaw
+        // v.x = (float)Mathf.Asin(2f * (q.x * q.z - q.w * q.y));                             // Pitch
+        // v.z = (float)Mathf.Atan2(2f * q.x * q.y + 2f * q.z * q.w, 1 - 2f * (q.y * q.y + q.z * q.z));      // Roll
+
+        v.y = (float)Mathf.Atan2(2f * rotation.w * rotation.y + 2f * rotation.z *  rotation.x, 1 - 2f * ( rotation.x *  rotation.x + rotation.y * rotation.y));     // Yaw
+        v.x = (float)Mathf.Asin(2f * (rotation.w *  rotation.x - rotation.y * rotation.z));                             // Pitch
+        v.z = (float)Mathf.Atan2(2f * rotation.w * rotation.z + 2f * rotation.x * rotation.y, 1 - 2f * (rotation.z * rotation.z +  rotation.x *  rotation.x));      // Roll
         return NormalizeAngles(v * Mathf.Rad2Deg);
     }
 
