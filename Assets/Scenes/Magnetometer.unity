@@ -335,7 +335,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   accelerometer: {fileID: 892150276}
   magnetometer: {fileID: 892150275}
+  dataLogger: {fileID: 892150281}
   eulerAngles: {x: 0, y: 0, z: 0}
+  noise: 0
 --- !u!1 &892150274
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,6 +351,7 @@ GameObject:
   - component: {fileID: 892150278}
   - component: {fileID: 892150277}
   - component: {fileID: 892150276}
+  - component: {fileID: 892150281}
   - component: {fileID: 892150275}
   m_Layer: 0
   m_Name: Sensor
@@ -381,6 +384,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b3717438a6a56e48a9ee33cc83b0141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fullScaleRange: 2
+  RMS: 0.008
 --- !u!65 &892150277
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -467,6 +472,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &892150281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892150274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08e0a25f69809e34991979b90c04dbb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1454793809
 GameObject:
   m_ObjectHideFlags: 0
