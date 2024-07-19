@@ -200,10 +200,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 679bd00f4a9eb304e8483e9ea970c88d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceObj: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   mode: 0
+  correctMaterial: {fileID: 2100000, guid: 30197a51d46bf4a48aa89d4057fa49ee, type: 2}
+  incorrectMaterial: {fileID: 2100000, guid: dce3a789f595f224a85f5cf4f2e6667d, type: 2}
+  acceptedDiff: 1
+  removeBias: 0
 --- !u!1 &420802851
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,6 +404,9 @@ PrefabInstance:
       addedObject: {fileID: 1935980345}
     - targetCorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1935980353}
+    - targetCorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1935980340}
     - targetCorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       insertIndex: -1
@@ -408,7 +416,7 @@ PrefabInstance:
       addedObject: {fileID: 1935980347}
     - targetCorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1935980348}
+      addedObject: {fileID: 1935980354}
   m_SourcePrefab: {fileID: 100100000, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
 --- !u!1001 &626523610
 PrefabInstance:
@@ -462,6 +470,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23868303300934196, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 940d4c7d3d8f0ff4aab297e184fe9ffd, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -487,10 +499,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 679bd00f4a9eb304e8483e9ea970c88d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceObj: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   mode: 2
+  correctMaterial: {fileID: 2100000, guid: 30197a51d46bf4a48aa89d4057fa49ee, type: 2}
+  incorrectMaterial: {fileID: 2100000, guid: dce3a789f595f224a85f5cf4f2e6667d, type: 2}
+  acceptedDiff: 1
+  removeBias: 0
 --- !u!1001 &636780799
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -568,10 +585,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 679bd00f4a9eb304e8483e9ea970c88d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceObj: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   mode: 3
+  correctMaterial: {fileID: 2100000, guid: 30197a51d46bf4a48aa89d4057fa49ee, type: 2}
+  incorrectMaterial: {fileID: 2100000, guid: dce3a789f595f224a85f5cf4f2e6667d, type: 2}
+  acceptedDiff: 1
+  removeBias: 1
+--- !u!1 &719542006 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
+  m_PrefabInstance: {fileID: 742796004}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &719542011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 719542006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 679bd00f4a9eb304e8483e9ea970c88d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceObj: {fileID: 1935980352}
+  gyroscope: {fileID: 1935980340}
+  acceleromter: {fileID: 1935980346}
+  magnetometer: {fileID: 1935980347}
+  mode: 4
+  correctMaterial: {fileID: 2100000, guid: 30197a51d46bf4a48aa89d4057fa49ee, type: 2}
+  incorrectMaterial: {fileID: 2100000, guid: dce3a789f595f224a85f5cf4f2e6667d, type: 2}
+  acceptedDiff: 1
+  removeBias: 1
 --- !u!1001 &742796004
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -627,7 +675,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 719542011}
   m_SourcePrefab: {fileID: 100100000, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
 --- !u!1 &847485628
 GameObject:
@@ -1096,6 +1147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UI: {fileID: 420802853}
   noisy: 1
+  isBias: 1
 --- !u!114 &1935980345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1123,6 +1175,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UI: {fileID: 938265370}
   noisy: 1
+  isBias: 1
 --- !u!114 &1935980347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1136,7 +1189,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UI: {fileID: 2083590878}
---- !u!114 &1935980348
+--- !u!4 &1935980352 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
+  m_PrefabInstance: {fileID: 606434039}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &1935980353
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1935980339}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1935980354
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1151,6 +1236,8 @@ MonoBehaviour:
   gyroscope: {fileID: 1935980340}
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
+  imu: {fileID: 719542011}
+  logToFile: 0
 --- !u!1 &1971547372
 GameObject:
   m_ObjectHideFlags: 0
@@ -1272,10 +1359,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 679bd00f4a9eb304e8483e9ea970c88d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  referenceObj: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   mode: 1
+  correctMaterial: {fileID: 2100000, guid: 30197a51d46bf4a48aa89d4057fa49ee, type: 2}
+  incorrectMaterial: {fileID: 2100000, guid: dce3a789f595f224a85f5cf4f2e6667d, type: 2}
+  acceptedDiff: 1
+  removeBias: 0
 --- !u!1 &2083590876
 GameObject:
   m_ObjectHideFlags: 0

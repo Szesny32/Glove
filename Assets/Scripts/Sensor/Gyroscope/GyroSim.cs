@@ -8,23 +8,31 @@ public class GyroSim : MonoBehaviour
 
     private Vector3 angularVelocity;
     private Vector3 angularVelocity_gt;
-    private Quaternion previousRotation;
+    private Vector3 previousAngle;
     [SerializeField]
     private TMP_Text UI;
 
     public bool noisy = false;
+    public bool isBias = false;
     Vector3 bias = new Vector3(0.0005f, 0.0005f, 0.00005f);
     Vector3 noise = new Vector3(0.00025f, 0.00025f, 0.000025f);
     
 
+
+
+
     void Start(){
-        previousRotation = transform.rotation;
+
+        previousAngle = transform.eulerAngles;
         angularVelocity_gt = angularVelocity = Vector3.zero;
     }
 
     void Update(){
-        Quaternion deltaRotation = transform.rotation * Quaternion.Inverse(previousRotation);
-        Vector3 deltaEuler = deltaRotation.eulerAngles;
+        Measurement();
+    }
+
+    private void Measurement(){
+        Vector3 deltaEuler = transform.rotation.eulerAngles - previousAngle;
         if (deltaEuler.x > 180) deltaEuler.x -= 360;
         if (deltaEuler.y > 180) deltaEuler.y -= 360;
         if (deltaEuler.z > 180) deltaEuler.z -= 360;
@@ -36,11 +44,24 @@ public class GyroSim : MonoBehaviour
                 RandomGaussian(0f, noise.y),
                 RandomGaussian(0f, noise.z)
             );
-            angularVelocity += ((bias + normalNoise) / Time.deltaTime);
+            angularVelocity += (normalNoise / Time.deltaTime);
         }
 
-        previousRotation = transform.rotation;
+        if(isBias){
+            angularVelocity += (bias / Time.deltaTime);
+        }
+
+        previousAngle = transform.rotation.eulerAngles;
         UI.text = $"Gyroscope: {angularVelocity} [rad/s]";
+    }
+
+
+    public Vector3 GetBias(){
+        return isBias? bias : Vector3.zero;
+    }
+
+    public Vector3 GetNoise(){
+        return noisy? noise : Vector3.zero;
     }
 
     public Vector3 Read(){

@@ -14,6 +14,7 @@ public class AccSim : MonoBehaviour
     private TMP_Text UI;
 
     public bool noisy = false;
+    public bool isBias = false;
     Vector3 bias = new Vector3(0.15f, 0.15f, -0.25f);
     Vector3 noise = new Vector3(0.25f, 0.25f, 0.25f);
     
@@ -40,7 +41,10 @@ public class AccSim : MonoBehaviour
                 RandomGaussian(0f, noise.y),
                 RandomGaussian(0f, noise.z)
             );
-            acceleration += (bias + normalNoise);
+            acceleration += normalNoise;
+        }
+        if(isBias){
+            acceleration += bias;
         }
 
         UI.text = $"Accelerometer: {acceleration} [m/s²]";
@@ -53,6 +57,15 @@ public class AccSim : MonoBehaviour
      public Vector3 GetGroundTrue(){
         return acceleration_gt;
     }
+
+    public Vector3 GetBias(){
+        return isBias? bias : Vector3.zero;
+    }
+
+    public Vector3 GetNoise(){
+        return noisy? noise : Vector3.zero;
+    }
+
 
 
     public static float RandomGaussian(float mean = 0.0f, float sigma = 1.0f) {
