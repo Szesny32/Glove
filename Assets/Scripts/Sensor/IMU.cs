@@ -38,10 +38,26 @@ public class IMU : MonoBehaviour
     private Vector3 previous_states = Vector3.zero;
     private Vector3 previous_process_covariances = Vector3.zero;
 
+    public Vector3 gyroBias;
+    public Vector3 accBias;
+    public Vector3 gyroNoise;
+    public Vector3 accNoise;
+
+    private Vector3 Q_angle;
+    private Vector3 R;
+
     void Start()
     {
         renderer = GetComponent<Renderer>();
         renderer.material = incorrectMaterial;
+
+
+
+        gyroBias = removeBias? gyroscope.GetBias() : Vector3.zero;
+        accBias = removeBias? acceleromter.GetBias() : Vector3.zero;
+        gyroNoise = gyroscope.GetNoise();
+        accNoise = acceleromter.GetNoise();
+
     }
 
     
@@ -52,6 +68,7 @@ public class IMU : MonoBehaviour
         //     UpdateOrientation();
         //     timer = 0.0f;
         // }
+
 
         UpdateOrientation();
         Verify();
@@ -115,14 +132,14 @@ public class IMU : MonoBehaviour
 
 
     private void GyroscopeMode(){
-        Vector3 bias = removeBias? gyroscope.GetBias() : Vector3.zero;
+        Vector3 bias = removeBias? gyroBias : Vector3.zero;
         Vector3 angularVelocity = gyroscope.Read();
         Vector3 deltaRotation = (angularVelocity * Time.deltaTime - bias) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(transform.eulerAngles + deltaRotation);
     }
 
     private void AcceleromterMode(){
-        Vector3 bias = removeBias? acceleromter.GetBias() : Vector3.zero;
+        Vector3 bias = removeBias? accBias: Vector3.zero;
         Vector3 acceleration = (acceleromter.Read() - bias) / g;
         Vector3 eulerAngles = Vector3.zero;
         eulerAngles.x = ( -Mathf.Atan2(acceleration.z, Mathf.Sqrt(Mathf.Pow(acceleration.x, 2) + Mathf.Pow(acceleration.y, 2))) * Mathf.Rad2Deg + 360f) % 360f;  
@@ -131,10 +148,10 @@ public class IMU : MonoBehaviour
     }
 
     private void AccMagMode(){
-        Vector3 accBias = removeBias? acceleromter.GetBias() : Vector3.zero;
+        Vector3 bias_acc = removeBias? accBias : Vector3.zero;
 
         //ACCELEROMTER
-        Vector3 acceleration = (acceleromter.Read() - accBias) / g;
+        Vector3 acceleration = (acceleromter.Read() - bias_acc) / g;
         Vector3 eulerAngles = Vector3.zero;
         eulerAngles.x = ( -Mathf.Atan2(acceleration.z, Mathf.Sqrt(Mathf.Pow(acceleration.x, 2) + Mathf.Pow(acceleration.y, 2))) * Mathf.Rad2Deg + 360f) % 360f;  
         eulerAngles.z = (Mathf.Atan2 (acceleration.x, acceleration.y) * Mathf.Rad2Deg+ 360f) % 360f;
@@ -183,14 +200,14 @@ public class IMU : MonoBehaviour
     }
 
     private void ComplementaryMode(){
-        Vector3 gyroBias = removeBias? gyroscope.GetBias() : Vector3.zero;
-        Vector3 accBias = removeBias? acceleromter.GetBias() : Vector3.zero;
+        Vector3 bias_gyro = removeBias? gyroBias : Vector3.zero;
+        Vector3 bias_acc = removeBias? accBias : Vector3.zero;
 
         Vector3 angularVelocity = gyroscope.Read();
-        Vector3 deltaRotation = (angularVelocity * Time.deltaTime - gyroBias) * Mathf.Rad2Deg;
+        Vector3 deltaRotation = (angularVelocity * Time.deltaTime - bias_gyro) * Mathf.Rad2Deg;
         Vector3 gyro = transform.eulerAngles + deltaRotation;
 
-        Vector3 acceleration = (acceleromter.Read() - accBias) / g;
+        Vector3 acceleration = (acceleromter.Read() - bias_acc) / g;
         Vector3 eulerAngles = Vector3.zero;
         eulerAngles.x = ( -Mathf.Atan2(acceleration.z, Mathf.Sqrt(Mathf.Pow(acceleration.x, 2) + Mathf.Pow(acceleration.y, 2))) * Mathf.Rad2Deg + 360f) % 360f;  
         eulerAngles.z = (Mathf.Atan2 (acceleration.x, acceleration.y) * Mathf.Rad2Deg+ 360f) % 360f;
@@ -227,11 +244,6 @@ public class IMU : MonoBehaviour
     }
 
     private void KalmanFilterMode(){
-        Vector3 gyroBias = removeBias? gyroscope.GetBias() : Vector3.zero;
-        Vector3 accBias = removeBias? acceleromter.GetBias() : Vector3.zero;
-        Vector3 gyroNoise = gyroscope.GetNoise();
-        Vector3 accNoise = acceleromter.GetNoise();
-
         Vector3 angularVelocity = gyroscope.Read();
         Vector3 deltaRotation = (angularVelocity * Time.deltaTime - gyroBias) * Mathf.Rad2Deg; 
 
@@ -248,16 +260,16 @@ public class IMU : MonoBehaviour
         eulerAngles.y = (-Mathf.Atan2(y, x) * Mathf.Rad2Deg + 360f) % 360f; //y was down
 
         // noise w żyro
-        Vector3 Q_angle =  new Vector3(
+        Q_angle =  new Vector3(
             Mathf.Pow(gyroNoise.x/Time.deltaTime, 2),
             Mathf.Pow(gyroNoise.y/Time.deltaTime, 2),
             Mathf.Pow(gyroNoise.z/Time.deltaTime, 2)
         );  
         
         // noise w acc
-        Vector3 R =  new Vector3(
+        R =  new Vector3(
             Mathf.Pow(accNoise.x, 2),
-            Mathf.Pow(accNoise.x, 2),
+            Mathf.Pow(accNoise.y, 2),
             Mathf.Pow(accNoise.z, 2)
         );   
 

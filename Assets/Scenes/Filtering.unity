@@ -209,6 +209,10 @@ MonoBehaviour:
   incorrectMaterial: {fileID: 2100000, guid: dce3a789f595f224a85f5cf4f2e6667d, type: 2}
   acceptedDiff: 1
   removeBias: 0
+  gyroBias: {x: 0, y: 0, z: 0}
+  accBias: {x: 0, y: 0, z: 0}
+  gyroNoise: {x: 0, y: 0, z: 0}
+  accNoise: {x: 0, y: 0, z: 0}
 --- !u!1 &420802851
 GameObject:
   m_ObjectHideFlags: 0
@@ -508,6 +512,10 @@ MonoBehaviour:
   incorrectMaterial: {fileID: 2100000, guid: dce3a789f595f224a85f5cf4f2e6667d, type: 2}
   acceptedDiff: 1
   removeBias: 0
+  gyroBias: {x: 0, y: 0, z: 0}
+  accBias: {x: 0, y: 0, z: 0}
+  gyroNoise: {x: 0, y: 0, z: 0}
+  accNoise: {x: 0, y: 0, z: 0}
 --- !u!1001 &636780799
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -594,6 +602,10 @@ MonoBehaviour:
   incorrectMaterial: {fileID: 2100000, guid: dce3a789f595f224a85f5cf4f2e6667d, type: 2}
   acceptedDiff: 1
   removeBias: 1
+  gyroBias: {x: 0, y: 0, z: 0}
+  accBias: {x: 0, y: 0, z: 0}
+  gyroNoise: {x: 0, y: 0, z: 0}
+  accNoise: {x: 0, y: 0, z: 0}
 --- !u!1 &719542006 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
@@ -620,6 +632,10 @@ MonoBehaviour:
   incorrectMaterial: {fileID: 2100000, guid: dce3a789f595f224a85f5cf4f2e6667d, type: 2}
   acceptedDiff: 1
   removeBias: 1
+  gyroBias: {x: 0, y: 0, z: 0}
+  accBias: {x: 0, y: 0, z: 0}
+  gyroNoise: {x: 0, y: 0, z: 0}
+  accNoise: {x: 0, y: 0, z: 0}
 --- !u!1001 &742796004
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1148,6 +1164,7 @@ MonoBehaviour:
   UI: {fileID: 420802853}
   noisy: 1
   isBias: 1
+  noise: {x: 0.0025, y: 0.0025, z: 0.0025}
 --- !u!114 &1935980345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1176,6 +1193,7 @@ MonoBehaviour:
   UI: {fileID: 938265370}
   noisy: 1
   isBias: 1
+  noise: {x: 0.25, y: 0.25, z: 0.25}
 --- !u!114 &1935980347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1368,6 +1386,10 @@ MonoBehaviour:
   incorrectMaterial: {fileID: 2100000, guid: dce3a789f595f224a85f5cf4f2e6667d, type: 2}
   acceptedDiff: 1
   removeBias: 0
+  gyroBias: {x: 0, y: 0, z: 0}
+  accBias: {x: 0, y: 0, z: 0}
+  gyroNoise: {x: 0, y: 0, z: 0}
+  accNoise: {x: 0, y: 0, z: 0}
 --- !u!1 &2083590876
 GameObject:
   m_ObjectHideFlags: 0

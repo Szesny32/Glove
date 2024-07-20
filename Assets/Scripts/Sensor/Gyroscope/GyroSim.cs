@@ -14,8 +14,8 @@ public class GyroSim : MonoBehaviour
 
     public bool noisy = false;
     public bool isBias = false;
-    Vector3 bias = new Vector3(0.0005f, 0.0005f, 0.00005f);
-    Vector3 noise = new Vector3(0.00025f, 0.00025f, 0.000025f);
+    private Vector3 bias = new Vector3(0.0005f, 0.0005f, 0.00005f);
+    public Vector3 noise = new Vector3(0.00025f, 0.00025f, 0.000025f);
     
 
 
