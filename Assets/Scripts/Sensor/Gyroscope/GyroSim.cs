@@ -8,7 +8,7 @@ public class GyroSim : MonoBehaviour
 
     private Vector3 angularVelocity;
     private Vector3 angularVelocity_gt;
-    private Vector3 previousAngle;
+    private Quaternion qPrev;
     [SerializeField]
     private TMP_Text UI;
 
@@ -23,7 +23,7 @@ public class GyroSim : MonoBehaviour
 
     void Start(){
 
-        previousAngle = transform.eulerAngles;
+        qPrev  = transform.rotation;
         angularVelocity_gt = angularVelocity = Vector3.zero;
     }
 
@@ -32,11 +32,14 @@ public class GyroSim : MonoBehaviour
     }
 
     private void Measurement(){
-        Vector3 deltaEuler = transform.rotation.eulerAngles - previousAngle;
-        if (deltaEuler.x > 180) deltaEuler.x -= 360;
-        if (deltaEuler.y > 180) deltaEuler.y -= 360;
-        if (deltaEuler.z > 180) deltaEuler.z -= 360;
-        angularVelocity_gt = angularVelocity = deltaEuler * Mathf.Deg2Rad / Time.deltaTime;
+
+        Quaternion qCurrent = transform.rotation;
+        Quaternion qPrevInverse = Quaternion.Inverse(qPrev);
+        Quaternion deltaQ = qCurrent * qPrevInverse;
+        Vector3 eulerDelta =  deltaQ.eulerAngles;
+
+
+        angularVelocity_gt = angularVelocity = eulerDelta * Mathf.Deg2Rad / Time.deltaTime;
 
         if(noisy){
             Vector3 normalNoise = new Vector3(
@@ -51,7 +54,7 @@ public class GyroSim : MonoBehaviour
             angularVelocity += (bias / Time.deltaTime);
         }
 
-        previousAngle = transform.rotation.eulerAngles;
+        qPrev  = transform.rotation;
         UI.text = $"Gyroscope: {angularVelocity} [rad/s]";
     }
 

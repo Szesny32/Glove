@@ -133,9 +133,9 @@ public class IMU : MonoBehaviour
 
     private void GyroscopeMode(){
         Vector3 bias = removeBias? gyroBias : Vector3.zero;
-        Vector3 angularVelocity = gyroscope.Read();
-        Vector3 deltaRotation = (angularVelocity * Time.deltaTime - bias) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(transform.eulerAngles + deltaRotation);
+        Vector3 angularVelocity = (gyroscope.Read() * Time.deltaTime - bias)  * Mathf.Rad2Deg;
+        Quaternion dQ = Quaternion.AngleAxis(angularVelocity.magnitude, angularVelocity.normalized);
+        transform.rotation *= dQ; 
     }
 
     private void AcceleromterMode(){
@@ -203,9 +203,9 @@ public class IMU : MonoBehaviour
         Vector3 bias_gyro = removeBias? gyroBias : Vector3.zero;
         Vector3 bias_acc = removeBias? accBias : Vector3.zero;
 
-        Vector3 angularVelocity = gyroscope.Read();
-        Vector3 deltaRotation = (angularVelocity * Time.deltaTime - bias_gyro) * Mathf.Rad2Deg;
-        Vector3 gyro = transform.eulerAngles + deltaRotation;
+        Vector3 angularVelocity = (gyroscope.Read() * Time.deltaTime - bias_gyro)  * Mathf.Rad2Deg;
+        Quaternion dQ = Quaternion.AngleAxis(angularVelocity.magnitude, angularVelocity.normalized);
+        Vector3 gyro = (transform.rotation* dQ).eulerAngles;
 
         Vector3 acceleration = (acceleromter.Read() - bias_acc) / g;
         Vector3 eulerAngles = Vector3.zero;

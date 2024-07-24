@@ -1163,7 +1163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UI: {fileID: 420802853}
   noisy: 1
-  isBias: 1
+  isBias: 0
   noise: {x: 0.0025, y: 0.0025, z: 0.0025}
 --- !u!114 &1935980345
 MonoBehaviour:
@@ -1192,7 +1192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UI: {fileID: 938265370}
   noisy: 1
-  isBias: 1
+  isBias: 0
   noise: {x: 0.25, y: 0.25, z: 0.25}
 --- !u!114 &1935980347
 MonoBehaviour:
