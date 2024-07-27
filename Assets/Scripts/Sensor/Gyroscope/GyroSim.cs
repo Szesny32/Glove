@@ -36,10 +36,17 @@ public class GyroSim : MonoBehaviour
         Quaternion qCurrent = transform.rotation;
         Quaternion qPrevInverse = Quaternion.Inverse(qPrev);
         Quaternion deltaQ = qCurrent * qPrevInverse;
-        Vector3 eulerDelta =  deltaQ.eulerAngles;
+ 
+        Vector3 axis;
+        float angle;
+        deltaQ.ToAngleAxis(out angle, out axis);
 
+        if (angle > 180f) angle -= 360f;  // Normalizuj kąt do przedziału [-180, 180]
+        angle = Mathf.Deg2Rad * angle;     // Przekształć stopnie na radiany
 
-        angularVelocity_gt = angularVelocity = eulerDelta * Mathf.Deg2Rad / Time.deltaTime;
+        angularVelocity_gt = angularVelocity = axis * (angle / Time.deltaTime);  // Prędkość kątowa w radianach na sekundę
+
+        //angularVelocity_gt = angularVelocity = deltaQ.eulerAngles * Mathf.Deg2Rad / Time.deltaTime;
 
         if(noisy){
             Vector3 normalNoise = new Vector3(
@@ -47,11 +54,11 @@ public class GyroSim : MonoBehaviour
                 RandomGaussian(0f, noise.y),
                 RandomGaussian(0f, noise.z)
             );
-            angularVelocity += (normalNoise / Time.deltaTime);
+            angularVelocity += normalNoise;
         }
 
         if(isBias){
-            angularVelocity += (bias / Time.deltaTime);
+            angularVelocity += bias;
         }
 
         qPrev  = transform.rotation;

@@ -12,7 +12,7 @@ public enum SensorMode
     KALMAN_FILTER
 }
 
-public class IMU : MonoBehaviour
+public class IMU2 : MonoBehaviour
 {
     public Transform referenceObj;
     public GyroSim gyroscope;
@@ -25,8 +25,11 @@ public class IMU : MonoBehaviour
     public Material correctMaterial;
     public Material incorrectMaterial;
     private Renderer renderer;
-    public float acceptedDiff = 1f;
+    public float angleThreshold = 2.0f;
+    protected bool rotationMatch = false;
 
+    public bool removeBiasMode = false;
+    
     
     private float frequency = 100f; //Hz
     private float samplingTime = 0.01f; // 1/Hz
@@ -57,6 +60,8 @@ public class IMU : MonoBehaviour
         accBias = removeBias? acceleromter.GetBias() : Vector3.zero;
         gyroNoise = gyroscope.GetNoise();
         accNoise = acceleromter.GetNoise();
+
+        transform.rotation = referenceObj.rotation;
 
     }
 
@@ -95,27 +100,15 @@ public class IMU : MonoBehaviour
     }
 
     void Verify(){
-        (float refFixed_X,  float gyroFixed_X) = fixAngles(referenceObj.eulerAngles.x, transform.eulerAngles.x);
-        (float refFixed_Y,  float gyroFixed_Y) = fixAngles(referenceObj.eulerAngles.y, transform.eulerAngles.y);
-        (float refFixed_Z,  float gyroFixed_Z) = fixAngles(referenceObj.eulerAngles.z, transform.eulerAngles.z);
-
-        float deltaX = Mathf.Abs(refFixed_X - gyroFixed_X);
-        float deltaY = Mathf.Abs(refFixed_Y - gyroFixed_Y);
-        float deltaZ = Mathf.Abs(refFixed_Z - gyroFixed_Z);
-        if((deltaX < acceptedDiff) && (deltaY < acceptedDiff) && (deltaZ < acceptedDiff)){
-            if(isOk==false){
-                isOk= true;
-                renderer.material = correctMaterial;
-            }
-
-        } else {
-            if(isOk==true){
-                isOk = false;
-                renderer.material = incorrectMaterial;
-            }
-            
+        float angleDifference = Quaternion.Angle(referenceObj.rotation, transform.rotation);
+        if (angleDifference <= angleThreshold && !rotationMatch) {
+            rotationMatch = true;
+            renderer.material = correctMaterial;
         }
-
+        else if (angleDifference > angleThreshold && rotationMatch){
+            rotationMatch = false;
+            renderer.material = incorrectMaterial;
+        }
 
     }
 

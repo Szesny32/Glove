@@ -10,7 +10,7 @@ public class DataLogger : MonoBehaviour
     public GyroSim gyroscope;
     public AccSim acceleromter;
     public MagSim magnetometer;
-    public IMU imu;
+    public IMU2 imu;
     public bool logToFile = false;
     void Start(){
         filePath = "C:/Users/Szesny/Desktop/Magisterka - playground/Sensor.csv";
