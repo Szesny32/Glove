@@ -202,12 +202,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reference: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
+  gyroscopeBias: {x: 0, y: 0, z: 0}
+  gyroscopeNoise: {x: 0, y: 0, z: 0}
   acceleromter: {fileID: 1935980346}
+  acceleromterBias: {x: 0, y: 0, z: 0}
+  acceleromterNoise: {x: 0, y: 0, z: 0}
   magnetometer: {fileID: 1935980347}
+  magnetometerNoise: {x: 0, y: 0, z: 0}
   correctMaterial: {fileID: 2100000, guid: c4f7fd0f87038104d8182f60012da5fc, type: 2}
   incorrectMaterial: {fileID: 2100000, guid: 3acbe7013301a8d4e97b75a27135265e, type: 2}
   angleThreshold: 1
   removeBiasMode: 1
+  removeNoiseMode: 0
 --- !u!1 &227898834 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
@@ -227,12 +233,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reference: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
+  gyroscopeBias: {x: 0, y: 0, z: 0}
+  gyroscopeNoise: {x: 0, y: 0, z: 0}
   acceleromter: {fileID: 1935980346}
+  acceleromterBias: {x: 0, y: 0, z: 0}
+  acceleromterNoise: {x: 0, y: 0, z: 0}
   magnetometer: {fileID: 1935980347}
+  magnetometerNoise: {x: 0, y: 0, z: 0}
   correctMaterial: {fileID: 2100000, guid: c4f7fd0f87038104d8182f60012da5fc, type: 2}
   incorrectMaterial: {fileID: 2100000, guid: 3acbe7013301a8d4e97b75a27135265e, type: 2}
   angleThreshold: 2
   removeBiasMode: 1
+  removeNoiseMode: 0
 --- !u!1001 &353676431
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1245,7 +1257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UI: {fileID: 420802853}
-  noisy: 0
+  noisy: 1
   isBias: 0
   noise: {x: 0.0025, y: 0.0025, z: 0.0025}
 --- !u!114 &1935980345

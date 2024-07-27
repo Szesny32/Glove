@@ -9,10 +9,10 @@ public class MagSim : MonoBehaviour
         
     private const float inclination = (66f + 2f/3f) * Mathf.Deg2Rad;
     private const float magneticFieldStrength = 49822.3f;
-    private readonly Vector3 origin = new Vector3(
+    private readonly Vector3 r = new Vector3(
             0f,
-            magneticFieldStrength * Mathf.Sin(inclination),
-            magneticFieldStrength * Mathf.Cos(inclination)
+           -Mathf.Sin(inclination),
+            Mathf.Cos(inclination)
     ); 
 
     private Vector3 magneticPole;
@@ -28,7 +28,28 @@ public class MagSim : MonoBehaviour
 
 
     void Update(){
-        magneticPole = yRot(transform.rotation.eulerAngles.y, xRot(transform.rotation.eulerAngles.x, zRot(transform.rotation.eulerAngles.z, origin)));
+        Quaternion q = transform.rotation;
+
+        float qx2 = q.x * q.x;
+        float qy2 = q.y * q.y;
+        float qz2 = q.z * q.z;
+
+        float qwqx = q.w * q.x;
+        float qwqy = q.w * q.y;
+        float qwqz = q.w * q.z;
+        float qxqy = q.x * q.y;
+        float qxqz = q.x * q.z;
+        float qyqz = q.y * q.z;
+
+
+        magneticPole = new Vector3(
+            r.x*(0.5f - qy2 - qz2) + r.y*(qwqz + qxqy) + r.z*(qxqz - qwqy),
+            r.x*(qxqy - qwqz) + r.y*(0.5f - qx2 - qz2) + r.z*(qwqx + qyqz),
+            r.x*(qwqy + qxqz) + r.y*(qyqz - qwqx) + r.z*(0.5f - qx2 - qy2)
+        );
+
+
+        //magneticPole = yRot(transform.rotation.eulerAngles.y, xRot(transform.rotation.eulerAngles.x, zRot(transform.rotation.eulerAngles.z, origin)));
         UI.text = $"Magnetometer: {magneticPole }[μT]";
     }
 
@@ -37,7 +58,7 @@ public class MagSim : MonoBehaviour
     }
 
     public Vector3 GetOrigin(){
-        return origin;
+        return r;
     }
 
     //Obróciłem rotacje z powrotem -> todo zobaczyć

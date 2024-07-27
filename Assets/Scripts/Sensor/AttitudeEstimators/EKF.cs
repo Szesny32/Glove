@@ -16,6 +16,21 @@ public class EKF : AttitudeEstimator
     
     private Matrix4x4 Q;  //Process Noise Covariance Matrix
 
+
+    private readonly Vector3 g = new Vector3(0, 1 , 0); //ENU
+
+    //Magnetic Dip Angle [TODO]
+    private const float inclination = (66f + 2f/3f) * Mathf.Deg2Rad;
+    private const float magneticFieldStrength = 49822.3f;
+
+    private readonly Vector3 r = new Vector3(            
+        0f,
+        -Mathf.Sin(inclination),
+        Mathf.Cos(inclination)
+    );
+
+
+
     float[,] _H;
     float[,] v;
     float[,] K;
@@ -128,12 +143,7 @@ public class EKF : AttitudeEstimator
     }
 
     private float[,] h(Vector4 q){
-        Vector3 g = new Vector3(0, 0 , -1); //NED
-
-        //Magnetic Dip Angle [TODO]
-        float theta = 0f;
-
-        Vector3 r = new Vector3(Mathf.Cos(theta), 0 , Mathf.Sin(theta)).normalized;
+       
         (float qw, float qx, float qy, float qz) = (q[0], q[1], q[2], q[3]);
         float qx2 = qx * qx;
         float qy2 = qy * qy;
@@ -158,11 +168,6 @@ public class EKF : AttitudeEstimator
     }
 
     private float[,] H(Vector4 q){
-        Vector3 g = new Vector3(0, 0 , -1); //NED
-        //Magnetic Dip Angle [TODO]
-        float theta = 0f;
-
-        Vector3 r = new Vector3(Mathf.Cos(theta), 0 , Mathf.Sin(theta)).normalized;
 
         (float qw, float qx, float qy, float qz) = (q[0], q[1], q[2], q[3]);
 

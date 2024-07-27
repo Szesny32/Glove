@@ -8,17 +8,17 @@ public class AttitudeEstimator : MonoBehaviour
 
     public GyroSim gyroscope;
     protected Vector3 angularVelocity;
-    protected Vector3 gyroscopeBias;
-    protected Vector3 gyroscopeNoise;
+    public Vector3 gyroscopeBias;
+    public Vector3 gyroscopeNoise;
 
     public AccSim acceleromter;
     protected Vector3 acceleration;
-    protected Vector3 acceleromterBias;
-    protected Vector3 acceleromterNoise;
+    public Vector3 acceleromterBias;
+    public Vector3 acceleromterNoise;
 
     public MagSim magnetometer;
     protected Vector3 magneticField;
-    protected Vector3 magnetometerNoise;
+    public Vector3 magnetometerNoise;
     
     protected Renderer renderer;
     public Material correctMaterial;
@@ -38,7 +38,11 @@ public class AttitudeEstimator : MonoBehaviour
         transform.rotation = reference.rotation;
 
         //[TODO]
-        gyroscopeNoise = acceleromterNoise = magnetometerNoise = Vector3.zero;
+        gyroscopeNoise = gyroscope.GetNoise();
+        acceleromterNoise  = acceleromter.GetNoise();
+
+        //TODO
+        magnetometerNoise  = Vector3.zero;
 
     }
 
@@ -48,9 +52,9 @@ public class AttitudeEstimator : MonoBehaviour
         angularVelocity = gyroscope.Read() - bias;
 
         bias = removeBiasMode? acceleromterBias : Vector3.zero;
-        acceleration = acceleromter.Read() - bias;
+        acceleration = (acceleromter.Read() - bias).normalized;
 
-        magneticField = magnetometer.Read();
+        magneticField = magnetometer.Read().normalized;
 
         UpdateOrientation();
         Verify();
