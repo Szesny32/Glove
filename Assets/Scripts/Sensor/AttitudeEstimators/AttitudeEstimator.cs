@@ -58,6 +58,7 @@ public class AttitudeEstimator : MonoBehaviour
 
         UpdateOrientation();
         Verify();
+
     }
 
     public virtual void UpdateOrientation(){

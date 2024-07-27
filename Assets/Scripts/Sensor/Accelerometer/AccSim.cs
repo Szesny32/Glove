@@ -15,8 +15,8 @@ public class AccSim : MonoBehaviour
 
     public bool noisy = false;
     public bool isBias = false;
-    Vector3 bias = new Vector3(0.15f, 0.15f, -0.25f);
-    public Vector3 noise = new Vector3(0.25f, 0.25f, 0.25f);
+    public Vector3 bias = new Vector3(0.15f, 0.15f, -0.25f);
+    public Vector3 noise = new Vector3(0.12f, 0.21f, 0.28f);
     
     
 

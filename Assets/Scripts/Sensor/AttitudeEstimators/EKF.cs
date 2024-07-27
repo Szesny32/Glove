@@ -20,35 +20,30 @@ public class EKF : AttitudeEstimator
     private readonly Vector3 g = new Vector3(0, 1 , 0); //ENU
 
     //Magnetic Dip Angle [TODO]
-    private const float inclination = (66f + 2f/3f) * Mathf.Deg2Rad;
-    private const float magneticFieldStrength = 49822.3f;
+    private const float inclination = (67.73f) * Mathf.Deg2Rad;
+    private const float regionalField = 50.06349f; //μT [TODO] //1f WORKS
 
     private readonly Vector3 r = new Vector3(            
-        0f,
-        -Mathf.Sin(inclination),
-        Mathf.Cos(inclination)
+            0f,
+            -Mathf.Sin(inclination),
+            Mathf.Cos(inclination)
     );
 
-
+    private string log ="";
 
     float[,] _H;
     float[,] v;
     float[,] K;
 
     public override void UpdateOrientation(){
+        log = "";
         PredictionStep();
         CorrectionStep();
 
 
         
-
         float[,] correction = _Matrix.Multiply(K, v);
-        // float[,] correction = new float[,]{
-        //     {0,0,0,0},
-        //     {0,0,0,0},
-        //     {0,0,0,0},
-        //     {0,0,0,0}
-        // };
+        log+= $"correction: {_Matrix.PrintMatrix(correction)}\n";
 
         state = new Vector4( 
             state_predicted[0] + correction[0,0],
@@ -56,12 +51,15 @@ public class EKF : AttitudeEstimator
             state_predicted[2] + correction[2,0],
             state_predicted[3] + correction[3,0]
         );
-
         transform.rotation = new Quaternion(state[1], state[2], state[3], state[0]).normalized;
 
         
-       float[,] newP = _Matrix.Multiply(_Matrix.Subtract(_Matrix.Identity(), _Matrix.Multiply(K, _H)), P_predicted);
-       P_predicted = _Matrix.ToMatrix4x4(newP);
+        float[,] newP = _Matrix.Multiply(_Matrix.Subtract(_Matrix.Identity(), _Matrix.Multiply(K, _H)), P_predicted);
+        P_predicted = _Matrix.ToMatrix4x4(newP);
+
+        log+= $"P_predicted: {_Matrix.PrintMatrix(P_predicted)}\n";
+
+        Debug.Log(log);
     }
 
 
@@ -118,27 +116,36 @@ public class EKF : AttitudeEstimator
 
     //Q
     private Matrix4x4 ProcessNoiseCovarianceMatrix(Vector3 spectralDensity, Vector4 q, float dt){
+        log+= "ProcessNoiseCovarianceMatrix:\n";
         float[,] W = WJacobian(q, dt);
-        float[,] Ew = spectralNoiseCovarianceMatrix(spectralDensity);
+        log+= $"W: {_Matrix.PrintMatrix(W)}\n";
 
+        float[,] Ew = spectralNoiseCovarianceMatrix(spectralDensity);
+        log+= $"Ew: {_Matrix.PrintMatrix(Ew)}\n";
+        log+= $"W @ Ew: {_Matrix.PrintMatrix(_Matrix.Multiply(W, Ew))}\n";
+        log+= $"WT: {_Matrix.PrintMatrix(_Matrix.Transpose(W))}\n";
         float[,] result = _Matrix.Multiply(_Matrix.Multiply(W, Ew), _Matrix.Transpose(W));
         return _Matrix.ToMatrix4x4(result);
-        
     }
 
 
     //Zamiast Omegi można wykorzystać EE-267(?)
     private void PredictionStep(){
+        log+= "PredictionStep:\n";
 
         //predicted state
         float dt = Time.deltaTime;
         state_predicted = f(state, angularVelocity, dt);
+        log+= $"state_predicted: {state_predicted}\n";
 
         //predicted covariance matrix
         Matrix4x4 F = FJacobian(angularVelocity, dt);
         Q = ProcessNoiseCovarianceMatrix(gyroscopeNoise, state, dt);
         P_predicted = _Matrix.Add(F * P * F.transpose, Q);
 
+        log+= $"Q: {_Matrix.PrintMatrix(Q)}\n";
+        log+= $"P_predicted: {_Matrix.PrintMatrix(P_predicted)}\n";
+            
 
     }
 
@@ -185,6 +192,9 @@ public class EKF : AttitudeEstimator
     }
 
     private void CorrectionStep(){
+
+        log+= $"\n\nCorrectionStep:\n";
+    
         Vector3 a = acceleration.normalized;
         Vector3 m = magneticField.normalized;
         float[,] z = new float[,]{
@@ -196,8 +206,12 @@ public class EKF : AttitudeEstimator
             { m.z } 
         };
 
+        log+= $"z: {_Matrix.PrintMatrix(z)}\n";
+
         //(Measurement acc_mag) subtract (predicted state as acc_mag)
         v = _Matrix.Subtract(z,  h(state_predicted));
+        log+= $"v: {_Matrix.PrintMatrix(v)}\n";
+
 
         float[,] R = {
             {acceleromterNoise.x, 0, 0, 0, 0, 0},
@@ -208,19 +222,28 @@ public class EKF : AttitudeEstimator
             {0, 0, 0, 0, 0, magnetometerNoise.z}
         };
 
+        log+= $"R: {_Matrix.PrintMatrix(R)}\n";
+        
+
         _H = H(state_predicted);
+        log+= $"H: {_Matrix.PrintMatrix(_H)}\n";
+
         float[,] _HT = _Matrix.Transpose(_H);
+        log+= $"H.T: {_Matrix.PrintMatrix(_HT)}\n";
+
 
         float[,] S = _Matrix.Add(_Matrix.Multiply(_Matrix.Multiply(_H, P_predicted), _HT), R); 
-
+        log+= $"S: {_Matrix.PrintMatrix(S)}\n";
 
         for (int i = 0; i < S.GetLength(0); i++) {
             S[i, i] += 1e-6f;
         }
 
         float[,] S_inv = _Matrix.InvertMatrix(S);
+        log+= $"S^-1: {_Matrix.PrintMatrix(S_inv)}\n";
 
         K = _Matrix.Multiply(_Matrix.Multiply(P_predicted, _HT), S_inv);
+        log+= $"K: {_Matrix.PrintMatrix(K)}\n";
         
     }
 

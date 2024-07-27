@@ -240,4 +240,34 @@ public class _Matrix
     }
 
 
+    public static string PrintMatrix(float[,] matrix){
+        int rows = matrix.GetLength(0); // Liczba wierszy
+        int cols = matrix.GetLength(1); // Liczba kolumn
+        string result = "";
+        for (int i = 0; i < rows; i++){
+            for (int j = 0; j < cols; j++) {
+                result +=$"{matrix[i, j],8:F16}"; 
+            }
+            result +="\n";
+        }
+        return result;
+    }
+
+    public static string PrintMatrix(Matrix4x4 matrix){
+
+        // Tworzymy string z macierzy
+        string matrixString = "";
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                matrixString += $"{matrix[i, j],16:F8}"; 
+            }
+            matrixString += "\n";
+        }
+        
+        return matrixString;
+    }
+
+
 }

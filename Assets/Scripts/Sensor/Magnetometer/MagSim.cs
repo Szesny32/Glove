@@ -7,13 +7,15 @@ public class MagSim : MonoBehaviour
 {
     //todo: przenalizować - nie zgadzają się wpsółczynniki
         
-    private const float inclination = (66f + 2f/3f) * Mathf.Deg2Rad;
-    private const float magneticFieldStrength = 49822.3f;
+    private const float inclination = (67.73f) * Mathf.Deg2Rad;
+    private const float regionalField = 50.06349f; //μT //1f WORKS
     private readonly Vector3 r = new Vector3(
-            0f,
-           -Mathf.Sin(inclination),
-            Mathf.Cos(inclination)
-    ); 
+        0f,
+        -Mathf.Sin(inclination),
+        Mathf.Cos(inclination)
+    ) * regionalField; 
+    
+
 
     private Vector3 magneticPole;
 
@@ -28,6 +30,7 @@ public class MagSim : MonoBehaviour
 
 
     void Update(){
+
         Quaternion q = transform.rotation;
 
         float qx2 = q.x * q.x;
@@ -46,7 +49,7 @@ public class MagSim : MonoBehaviour
             r.x*(0.5f - qy2 - qz2) + r.y*(qwqz + qxqy) + r.z*(qxqz - qwqy),
             r.x*(qxqy - qwqz) + r.y*(0.5f - qx2 - qz2) + r.z*(qwqx + qyqz),
             r.x*(qwqy + qxqz) + r.y*(qyqz - qwqx) + r.z*(0.5f - qx2 - qy2)
-        );
+        ) * 2f;
 
 
         //magneticPole = yRot(transform.rotation.eulerAngles.y, xRot(transform.rotation.eulerAngles.x, zRot(transform.rotation.eulerAngles.z, origin)));
