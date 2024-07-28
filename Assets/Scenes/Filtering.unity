@@ -204,6 +204,7 @@ MonoBehaviour:
   gyroscope: {fileID: 1935980340}
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
+  angleDifference: 0
   removeBiasMode: 0
 --- !u!1 &227898834 stripped
 GameObject:
@@ -226,6 +227,7 @@ MonoBehaviour:
   gyroscope: {fileID: 1935980340}
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
+  angleDifference: 0
   removeBiasMode: 0
 --- !u!1001 &353676431
 PrefabInstance:
@@ -578,6 +580,7 @@ MonoBehaviour:
   gyroscope: {fileID: 1935980340}
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
+  angleDifference: 0
   removeBiasMode: 0
 --- !u!1001 &636780799
 PrefabInstance:
@@ -660,6 +663,7 @@ MonoBehaviour:
   gyroscope: {fileID: 1935980340}
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
+  angleDifference: 0
   removeBiasMode: 0
   alpha: 0.98
 --- !u!1 &719542006 stripped
@@ -1222,7 +1226,7 @@ MonoBehaviour:
   noisy: 0
   isBias: 0
   bias: {x: 0.014, y: 0.072, z: 0.00026}
-  noise: {x: 0.27, y: 0.3, z: 0.1}
+  noise: {x: 0.22, y: 0.27, z: 0.45}
 --- !u!114 &1935980345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1423,6 +1427,7 @@ MonoBehaviour:
   gyroscope: {fileID: 1935980340}
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
+  angleDifference: 0
   removeBiasMode: 0
 --- !u!1 &2083590876
 GameObject:
