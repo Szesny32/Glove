@@ -7,7 +7,7 @@ public class EKF : AttitudeEstimator
 
 
     
-    private _Quaternion state = new _Quaternion(1, 0, 0, 0);
+    private _Quaternion state;
     private _Quaternion state_predicted;
 
     private _Matrix P; //Noise covariance;
@@ -31,13 +31,31 @@ public class EKF : AttitudeEstimator
     _Matrix v;
     _Matrix K;
 
+    //The measurement noise covariance matrix
+    _Matrix R;
+    public override void Init(){
+        state = new _Quaternion(1, 0, 0, 0);
+        P = _Matrix.Identity(4);
+
+        R = new _Matrix( new float[,]{
+            {acceleromterNoise.x, 0, 0, 0, 0, 0},
+            {0, acceleromterNoise.y, 0, 0, 0, 0},
+            {0, 0, acceleromterNoise.z, 0, 0, 0},
+            {0, 0, 0, magnetometerNoise.x, 0, 0},
+            {0, 0, 0, 0, magnetometerNoise.y, 0},
+            {0, 0, 0, 0, 0, magnetometerNoise.z}
+        });
+    }
+
 
     public override void UpdateOrientation(){
         PredictionStep();
         CorrectionStep();
 
+        Debug.Log(K.Print());
         _Quaternion correction = (K * v).toQuaternion();
         state = state_predicted + correction;
+        state.Normalize();
 
         transform.rotation = new Quaternion(state[1,0], state[2,0], state[3,0], state[0,0]).normalized;
 
@@ -104,15 +122,15 @@ public class EKF : AttitudeEstimator
     //spectral noise covariance matrix
     private _Matrix spectralNoiseCovarianceMatrix(Vector3 noise){
         return new _Matrix(new float[,]{
-            { Mathf.Pow(noise.x, 2), 0, 0},
-            { 0, Mathf.Pow(noise.y, 2), 0},
-            { 0, 0, Mathf.Pow(noise.z, 2)}
+            { noise.x, 0, 0},
+            { 0, noise.y, 0},
+            { 0, 0, noise.z, }
         });
     }
 
     //--------------------------------------------------------------------------------------------------------
 
-
+ 
 
     //-----------CORRECTION STEP------------------------------------------------------------------------------
 
@@ -137,22 +155,14 @@ public class EKF : AttitudeEstimator
 
         _H = H(state_predicted);
 
-        //The measurement noise covariance matrix
-            _Matrix R = new _Matrix( new float[,]{
-        {Mathf.Pow(acceleromterNoise.x, 2), 0, 0, 0, 0, 0},
-        {0, Mathf.Pow(acceleromterNoise.y, 2), 0, 0, 0, 0},
-        {0, 0, Mathf.Pow(acceleromterNoise.z, 2), 0, 0, 0},
-        {0, 0, 0, Mathf.Pow(magnetometerNoise.x, 2), 0, 0},
-        {0, 0, 0, 0, Mathf.Pow(magnetometerNoise.y, 2), 0},
-        {0, 0, 0, 0, 0, Mathf.Pow(magnetometerNoise.z, 2)}
-    });
+ 
         _Matrix S = _H * P_predicted * _H.T + R;
-
+        
         for (int i = 0; i < S.GetLength(0); i++) {
-            S[i, i] += 1e-6f;
+                S[i, i] +=  1e-6f;
         }
 
-        K = P_predicted * _H.T * S. Inv;
+        K = P_predicted * _H.T * S.Inv;
     
     }
 

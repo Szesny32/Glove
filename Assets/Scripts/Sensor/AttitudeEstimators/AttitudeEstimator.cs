@@ -49,8 +49,14 @@ public class AttitudeEstimator : MonoBehaviour
         acceleromterNoise  = acceleromter.GetNoise();
 
         //TODO
-        magnetometerNoise  = Vector3.zero;
+        magnetometerNoise  = magnetometer.GetNoise();
 
+        Init();
+
+    }
+
+
+    public virtual void Init(){
     }
 
     void Update()

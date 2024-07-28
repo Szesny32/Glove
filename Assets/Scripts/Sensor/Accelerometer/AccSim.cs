@@ -16,7 +16,7 @@ public class AccSim : MonoBehaviour
     public bool noisy = false;
     public bool isBias = false;
     public Vector3 bias = new Vector3(0.15f, 0.15f, -0.25f);
-    public Vector3 noise = new Vector3(0.12f, 0.21f, 0.28f);
+    public Vector3 noise = new Vector3(0.12f, 0.21f, 0.28f); //variance
     
     
 
@@ -29,11 +29,11 @@ public class AccSim : MonoBehaviour
     {
 
         Quaternion q = transform.rotation;
-       acceleration_gt = acceleration = new Vector3(
-           2f*(q.x*q.y + q.w*q.z), 
-           -q.x*q.x + q.y*q.y - q.z*q.z + q.w*q.w,
-           2f*(q.y*q.z - q.x*q.w)
-       ) * g;
+        acceleration_gt = acceleration = new Vector3(
+            2f*(q.x*q.y + q.w*q.z), 
+            -q.x*q.x + q.y*q.y - q.z*q.z + q.w*q.w,
+            2f*(q.y*q.z - q.x*q.w)
+        ) * g;
         //acceleration_gt = acceleration = zRot(-q.eulerAngles.x ,xRot(-q.eulerAngles.x, yRot(-q.eulerAngles.y, Vector3.up))) * g;
        
 
@@ -41,9 +41,9 @@ public class AccSim : MonoBehaviour
 
         if(noisy){
             Vector3 normalNoise = new Vector3(
-                RandomGaussian(0f, noise.x),
-                RandomGaussian(0f, noise.y),
-                RandomGaussian(0f, noise.z)
+                Noise.Generate(noise.x),
+                Noise.Generate(noise.y),
+                Noise.Generate(noise.z)
             );
             acceleration += normalNoise;
         }
@@ -70,21 +70,5 @@ public class AccSim : MonoBehaviour
         return noisy? noise : Vector3.zero;
     }
 
-
-
-    public static float RandomGaussian(float mean = 0.0f, float sigma = 1.0f) {
-        float u, v, S;
-
-        do
-        {
-            u = 2.0f * UnityEngine.Random.value - 1.0f;
-            v = 2.0f * UnityEngine.Random.value - 1.0f;
-            S = u * u + v * v;
-        }
-        while (S >= 1.0f);
-
-        float std = u * Mathf.Sqrt(-2.0f * Mathf.Log(S) / S);
-        return Mathf.Clamp(std * sigma + mean, mean - sigma, mean + sigma);
-    }
 
 }

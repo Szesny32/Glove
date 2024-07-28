@@ -19,6 +19,8 @@ public class MagSim : MonoBehaviour
 
     private Vector3 magneticPole;
 
+    public bool noisy = false;
+    public Vector3 noise = new Vector3(2f, 1f, 1.5f); //variance
 
     [SerializeField]
     private TMP_Text UI;
@@ -51,6 +53,16 @@ public class MagSim : MonoBehaviour
             r.x*(qwqy + qxqz) + r.y*(qyqz - qwqx) + r.z*(0.5f - qx2 - qy2)
         ) * 2f;
 
+        if(noisy){
+            Vector3 normalNoise = new Vector3(
+                Noise.Generate(noise.x),
+                Noise.Generate(noise.y),
+                Noise.Generate(noise.z)
+            );
+            magneticPole += normalNoise;
+        }
+        
+
 
         //magneticPole = yRot(transform.rotation.eulerAngles.y, xRot(transform.rotation.eulerAngles.x, zRot(transform.rotation.eulerAngles.z, origin)));
         UI.text = $"Magnetometer: {magneticPole }[μT]";
@@ -62,6 +74,10 @@ public class MagSim : MonoBehaviour
 
     public Vector3 GetOrigin(){
         return r;
+    }
+
+    public Vector3 GetNoise(){
+        return noisy? noise : Vector3.zero;
     }
 
     //Obróciłem rotacje z powrotem -> todo zobaczyć

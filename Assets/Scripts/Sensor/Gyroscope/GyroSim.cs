@@ -12,7 +12,7 @@ public class GyroSim : MonoBehaviour{
     public bool noisy = false;
     public bool isBias = false;
     public Vector3 bias = new Vector3(0.014f, 0.072f, 0.00026f);
-    public Vector3 noise = new Vector3(0.2f, 0.5f, 0.025f);
+    public Vector3 noise = new Vector3(0.2f, 0.5f, 0.025f); //variance
     
     void Start(){
         qPrev  = transform.rotation;
@@ -40,9 +40,9 @@ public class GyroSim : MonoBehaviour{
   
         if(noisy){
             Vector3 normalNoise = new Vector3(
-                RandomGaussian(0f, noise.x),
-                RandomGaussian(0f, noise.y),
-                RandomGaussian(0f, noise.z)
+                Noise.Generate(noise.x),
+                Noise.Generate(noise.y),
+                Noise.Generate(noise.z)
             );
             angularVelocity += normalNoise;
         }
@@ -71,16 +71,4 @@ public class GyroSim : MonoBehaviour{
         return angularVelocity_gt;
     }
 
-    public static float RandomGaussian(float mean = 0.0f, float sigma = 1.0f){
-        float u, v, S;
-        do  {
-            u = 2.0f * UnityEngine.Random.value - 1.0f;
-            v = 2.0f * UnityEngine.Random.value - 1.0f;
-            S = u * u + v * v;
-        }
-        while (S >= 1.0f);
-
-        float std = u * Mathf.Sqrt(-2.0f * Mathf.Log(S) / S);
-        return Mathf.Clamp(std * sigma + mean, mean - sigma, mean + sigma);
-    }
 }

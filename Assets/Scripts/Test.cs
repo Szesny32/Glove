@@ -16,7 +16,9 @@ public class Test : MonoBehaviour
         //SubtractTest();        
         //MultiplicationTest2();
         //Debug.Log(new _Quaternion(1, 2, 3, 4).T.Print());
-        AddTest2();
+        //AddTest2();
+        InverseTest();
+
     }
 
 
@@ -132,5 +134,26 @@ public class Test : MonoBehaviour
         _Quaternion C = Q1+Q2;
         Debug.Log(C.Print());
     }
+
+     public void InverseTest(){
+        _Matrix A = new _Matrix(new float[,]{
+            {1, 2, 3, 4}, 
+            {0, 1, 4, 5},
+            {2, 3, 1, 2}, 
+            {1, 0, 2, 3}});
+        Debug.Log(A.Inv.Print());
+
+
+        _Matrix B = new _Matrix(new float[,]{   
+            {4, 0, 0, 0, 2, 0},   
+            {0, 1, 0, 0, 0, 0},   
+            {0, 0, 4, 0, 0, 0},   
+            {0, 0, 0, 5, 0, 0},   
+            {2, 0, 0, 0, 4, 0},   
+            {0, 0, 0, 0, 0, 6} });
+        Debug.Log(B.Inv.Print());
+    }
+
+
 
 }

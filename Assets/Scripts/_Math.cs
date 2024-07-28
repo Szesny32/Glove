@@ -54,6 +54,17 @@ public class _Quaternion
         return (i < 2)? matrix.GetLength(i) : 0;
     }
 
+    public void Normalize() {
+        float norm = (float)Math.Sqrt(w * w + x * x + y * y + z * z);
+        if (norm == 0) {
+            throw new InvalidOperationException("Cannot normalize a quaternion with zero length.");
+        }
+        w /= norm;
+        x /= norm;
+        y /= norm;
+        z /= norm;
+    }
+
     
     public _Matrix T{
         get { return _Matrix.Transpose(matrix); }
@@ -184,7 +195,6 @@ public class _Matrix
 
         return new _Quaternion(result);
     }
-
 
 
 
@@ -337,9 +347,7 @@ public class _Matrix
         if(rowsA != 4 || colsA != 1){
             throw new ArgumentException("Matrix should has structure 4x1 to convert it to Quaternion"); 
         }
-
         return new _Quaternion(this.matrix);
-
 
     }
 

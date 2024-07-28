@@ -484,9 +484,6 @@ PrefabInstance:
       addedObject: {fileID: 1935980345}
     - targetCorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1935980353}
-    - targetCorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1935980340}
     - targetCorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       insertIndex: -1
@@ -1223,10 +1220,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UI: {fileID: 420802853}
-  noisy: 0
+  noisy: 1
   isBias: 0
   bias: {x: 0.014, y: 0.072, z: 0.00026}
-  noise: {x: 0.22, y: 0.27, z: 0.45}
+  noise: {x: 0.48, y: 0.78, z: 0.67}
 --- !u!114 &1935980345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1253,7 +1250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UI: {fileID: 938265370}
-  noisy: 0
+  noisy: 1
   isBias: 0
   bias: {x: 0.15, y: 0.15, z: -0.25}
   noise: {x: 0.42, y: 0.36, z: 0.15}
@@ -1269,39 +1266,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d5dda5c134a79a47b8f928404b72e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noisy: 1
+  noise: {x: 1, y: 0.5, z: 1.12}
   UI: {fileID: 2083590878}
 --- !u!4 &1935980352 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
   m_PrefabInstance: {fileID: 606434039}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &1935980353
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1935980339}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &1971547372
 GameObject:
   m_ObjectHideFlags: 0
