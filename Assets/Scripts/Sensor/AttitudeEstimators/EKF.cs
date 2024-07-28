@@ -7,19 +7,16 @@ public class EKF : AttitudeEstimator
 
 
     
-    private Vector4 state = new Vector4(1, 0, 0, 0);
-    private Vector4 state_predicted;
+    private _Quaternion state = new _Quaternion(1, 0, 0, 0);
+    private _Quaternion state_predicted;
 
-    private Matrix4x4 P; //Noise covariance;
-    private Matrix4x4 P_predicted; //Predicted noise covariance
+    private _Matrix P; //Noise covariance;
+    private _Matrix P_predicted; //Predicted noise covariance
 
-    
-    private Matrix4x4 Q;  //Process Noise Covariance Matrix
-
+    private _Matrix Q;  //Process Noise Covariance Matrix
 
     private readonly Vector3 g = new Vector3(0, 1 , 0); //ENU
 
-    //Magnetic Dip Angle [TODO]
     private const float inclination = (67.73f) * Mathf.Deg2Rad;
     private const float regionalField = 50.06349f; //μT [TODO] //1f WORKS
 
@@ -29,21 +26,29 @@ public class EKF : AttitudeEstimator
             Mathf.Cos(inclination)
     );
 
-    private string log ="";
+
+
+    //The measurement noise covariance matrix
+    private _Matrix R = new _Matrix( new float[,]{
+            {Mathf.Pow(acceleromterNoise.x, 2), 0, 0, 0, 0, 0},
+            {0, Mathf.Pow(acceleromterNoise.y, 2), 0, 0, 0, 0},
+            {0, 0, Mathf.Pow(acceleromterNoise.z, 2), 0, 0, 0},
+            {0, 0, 0, Mathf.Pow(magnetometerNoise.x, 2), 0, 0},
+            {0, 0, 0, 0, Mathf.Pow(magnetometerNoise.y, 2), 0},
+            {0, 0, 0, 0, 0, Mathf.Pow(magnetometerNoise.z, 2)}
+    });
+
 
     float[,] _H;
     float[,] v;
     float[,] K;
 
+
     public override void UpdateOrientation(){
-        log = "";
         PredictionStep();
         CorrectionStep();
 
-
-        
         float[,] correction = _Matrix.Multiply(K, v);
-        log+= $"correction: {_Matrix.PrintMatrix(correction)}\n";
 
         state = new Vector4( 
             state_predicted[0] + correction[0,0],
@@ -57,104 +62,120 @@ public class EKF : AttitudeEstimator
         float[,] newP = _Matrix.Multiply(_Matrix.Subtract(_Matrix.Identity(), _Matrix.Multiply(K, _H)), P_predicted);
         P_predicted = _Matrix.ToMatrix4x4(newP);
 
-        log+= $"P_predicted: {_Matrix.PrintMatrix(P_predicted)}\n";
-
-        //Debug.Log(log);
     }
 
 
-
-    //PREDICTION STEP
-
-    private Matrix4x4 Omega(Vector3 w){
-        Matrix4x4 omega = new Matrix4x4();
-        omega.SetRow(0, new Vector4(0, -w.x, -w.y, -w.z));
-        omega.SetRow(1, new Vector4(w.x, 0, w.z, -w.y));
-        omega.SetRow(2, new Vector4(w.y, -w.z, 0, w.x));
-        omega.SetRow(3, new Vector4(w.z, w.y, -w.x, 0));
-        return omega;
-    }
-
-    private Vector4 f(Vector4 q, Vector3 w, float dt){
-        return (_Matrix.Add(Matrix4x4.identity, _Matrix.Scale(Omega(w), 0.5f * dt)) *  q).normalized;
-    }
-
-    //Jacobian
-    private Matrix4x4 FJacobian(Vector3 w, float dt){
-            float Fx = 0.5f * dt * w.x;
-            float Fy = 0.5f * dt * w.y;
-            float Fz = 0.5f * dt * w.z;
-
-            Matrix4x4 F = new Matrix4x4();
-            F.SetRow(0, new Vector4(1, -Fx, -Fy, -Fz));
-            F.SetRow(1, new Vector4(Fx, 1, Fz, -Fy));
-            F.SetRow(2, new Vector4(Fy, -Fz, 1, Fx));
-            F.SetRow(3, new Vector4(Fz, Fy, -Fx, 1));
-            return F;
-    }
-
-
-    private float[,] WJacobian(Vector4 q, float dt){
-        (float qw, float qx, float qy, float qz) = (0.5f * dt * q[0], 0.5f * dt * q[1], 0.5f * dt * q[2], 0.5f * dt * q[3]);
-        return new float[,]{
-            { -qx, -qy, -qz},
-            { qw, -qz, qy},
-            { qz, qw, -qx},
-            { -qy, qx, qw}
-        };
-    }
-
-    //spectral noise covariance matrix
-    private float[,] spectralNoiseCovarianceMatrix(Vector3 spectralDensity){
-
-           return new float[,]{
-            { spectralDensity.x, 0, 0},
-            { 0, spectralDensity.y, 0},
-            { 0, 0, spectralDensity.z}
-        };
-    }
-
-    //Q
-    private Matrix4x4 ProcessNoiseCovarianceMatrix(Vector3 spectralDensity, Vector4 q, float dt){
-        log+= "ProcessNoiseCovarianceMatrix:\n";
-        float[,] W = WJacobian(q, dt);
-        log+= $"W: {_Matrix.PrintMatrix(W)}\n";
-
-        float[,] Ew = spectralNoiseCovarianceMatrix(spectralDensity);
-        log+= $"Ew: {_Matrix.PrintMatrix(Ew)}\n";
-        log+= $"W @ Ew: {_Matrix.PrintMatrix(_Matrix.Multiply(W, Ew))}\n";
-        log+= $"WT: {_Matrix.PrintMatrix(_Matrix.Transpose(W))}\n";
-        float[,] result = _Matrix.Multiply(_Matrix.Multiply(W, Ew), _Matrix.Transpose(W));
-        return _Matrix.ToMatrix4x4(result);
-    }
-
+    //-----------PREDICTION STEP------------------------------------------------------------------------------
 
     //Zamiast Omegi można wykorzystać EE-267(?)
     private void PredictionStep(){
-        log+= "PredictionStep:\n";
-
-        //predicted state
         float dt = Time.deltaTime;
         state_predicted = f(state, angularVelocity, dt);
-        log+= $"state_predicted: {state_predicted}\n";
 
-        //predicted covariance matrix
-        Matrix4x4 F = FJacobian(angularVelocity, dt);
+        _Matrix F = FJacobian(angularVelocity, dt);
         Q = ProcessNoiseCovarianceMatrix(gyroscopeNoise, state, dt);
-        P_predicted = _Matrix.Add(F * P * F.transpose, Q);
-
-        log+= $"Q: {_Matrix.PrintMatrix(Q)}\n";
-        log+= $"P_predicted: {_Matrix.PrintMatrix(P_predicted)}\n";
-            
-
+        P_predicted = F * P * F.T + Q;
     }
 
-    private float[,] h(Vector4 q){
-       
-        (float qw, float qx, float qy, float qz) = (q[0], q[1], q[2], q[3]);
-        float qx2 = qx * qx;
-        float qy2 = qy * qy;
-        float qz2 = qz * qz;
+    private _Quaternion f(_Quaternion q, Vector3 w, float dt){
+        return(_Matrix.Identity(4) + (dt/2)* Omega(w)) * q;
+    }
+
+    private _Matrix Omega(Vector3 w){
+        return new _Matrix(
+            new float[,]{
+                {0, -w.x, -w.y, -w.z},
+                {w.x, 0, w.z, -w.y},
+                {w.y, -w.z, 0, w.x},
+                {w.z, w.y, -w.x, 0}
+            }
+        );
+    }
+
+    private _Matrix FJacobian(Vector3 w, float dt){
+        Vector F = w * (dt/2);
+        return new _Matrix(
+            new float[,]{
+                {1, -F.x, -F.y, -F.z},
+                {F.x, 1, F.z, -F.y},
+                {F.y, -F.z, 1, F.x},
+                {F.z, F.y, -F.x, 1}
+            }
+        );
+    }
+
+    //Q
+    private _Matrix ProcessNoiseCovarianceMatrix(Vector3 noise, _Quaternion q, float dt){
+        _Matrix W = WJacobian(q, dt);
+        _Matrix Ew = spectralNoiseCovarianceMatrix(noise);
+        return W * Ew * W.T;
+    }
+
+    private _Matrix WJacobian(_Quaternion q, float dt){
+        return (dt/2) * new _Matrix(new float[,]{
+            { -q.x, -q.y, -q.z},
+            { q.w, -q.z, q.y},
+            { q.z, q.w, -q.x},
+            { -q.y, q.x, q.w}
+        });
+    }
+
+    //spectral noise covariance matrix
+    private _Matrix spectralNoiseCovarianceMatrix(Vector3 noise){
+        return new _Matrix(new float[,]{
+            { Mathf.Pow(noise.x, 2), 0, 0},
+            { 0, Mathf.Pow(noise.y, 2), 0},
+            { 0, 0, Mathf.Pow(noise.z, 2)}
+        });
+    }
+
+    //--------------------------------------------------------------------------------------------------------
+
+
+
+    //-----------CORRECTION STEP------------------------------------------------------------------------------
+
+
+    private void CorrectionStep(){
+
+        Vector3 a = acceleration.normalized;
+        Vector3 m = magneticField.normalized;
+        _Matrix z = NEW _Matrix(new float[,]{
+            { a.x } ,
+            { a.y } ,
+            { a.z } ,
+            { m.x } ,
+            { m.y } ,
+            { m.z } 
+        });
+
+
+        //(Measurement acc_mag) subtract (predicted state as acc_mag)
+        v = z - h(state_predicted);
+
+
+   
+
+
+        _H = H(state_predicted);
+
+        float[,] _HT = _Matrix.Transpose(_H);
+
+        float[,] S = _Matrix.Add(_Matrix.Multiply(_Matrix.Multiply(_H, P_predicted), _HT), R); 
+
+        for (int i = 0; i < S.GetLength(0); i++) {
+            S[i, i] += 1e-6f;
+        }
+        float[,] S_inv = _Matrix.InvertMatrix(S);
+        K = _Matrix.Multiply(_Matrix.Multiply(P_predicted, _HT), S_inv);
+
+        
+    }
+
+    private _Matrix h(_Quaternion q){
+        float qx2 = q.x * q.x;
+        float qy2 = q.y * q.y;
+        float qz2 = q.z * q.z;
 
         float qwqx = qw * qx;
         float qwqy = qw * qy;
@@ -171,7 +192,7 @@ public class EKF : AttitudeEstimator
             {r.x*(qxqy - qwqz) + r.y*(0.5f - qx2 - qz2) + r.z*(qwqx + qyqz)},
             {r.x*(qwqy + qxqz) + r.y*(qyqz - qwqx) + r.z*(0.5f - qx2 - qy2)}
         };
-        return _Matrix.Scale(result, 2);
+        return 2 * new _Matrix(result);
     }
 
     private float[,] H(Vector4 q){
@@ -189,62 +210,6 @@ public class EKF : AttitudeEstimator
         };
 
         return _Matrix.Scale(result, 2);
-    }
-
-    private void CorrectionStep(){
-
-        log+= $"\n\nCorrectionStep:\n";
-    
-        Vector3 a = acceleration.normalized;
-        Vector3 m = magneticField.normalized;
-        float[,] z = new float[,]{
-            { a.x } ,
-            { a.y } ,
-            { a.z } ,
-            { m.x } ,
-            { m.y } ,
-            { m.z } 
-        };
-
-        log+= $"z: {_Matrix.PrintMatrix(z)}\n";
-
-        //(Measurement acc_mag) subtract (predicted state as acc_mag)
-        v = _Matrix.Subtract(z,  h(state_predicted));
-        log+= $"v: {_Matrix.PrintMatrix(v)}\n";
-
-
-        float[,] R = {
-            {acceleromterNoise.x, 0, 0, 0, 0, 0},
-            {0, acceleromterNoise.y, 0, 0, 0, 0},
-            {0, 0, acceleromterNoise.z, 0, 0, 0},
-            {0, 0, 0, magnetometerNoise.x, 0, 0},
-            {0, 0, 0, 0, magnetometerNoise.y, 0},
-            {0, 0, 0, 0, 0, magnetometerNoise.z}
-        };
-
-        log+= $"R: {_Matrix.PrintMatrix(R)}\n";
-        
-
-        _H = H(state_predicted);
-        log+= $"H: {_Matrix.PrintMatrix(_H)}\n";
-
-        float[,] _HT = _Matrix.Transpose(_H);
-        log+= $"H.T: {_Matrix.PrintMatrix(_HT)}\n";
-
-
-        float[,] S = _Matrix.Add(_Matrix.Multiply(_Matrix.Multiply(_H, P_predicted), _HT), R); 
-        log+= $"S: {_Matrix.PrintMatrix(S)}\n";
-
-        for (int i = 0; i < S.GetLength(0); i++) {
-            S[i, i] += 1e-6f;
-        }
-
-        float[,] S_inv = _Matrix.InvertMatrix(S);
-        log+= $"S^-1: {_Matrix.PrintMatrix(S_inv)}\n";
-
-        K = _Matrix.Multiply(_Matrix.Multiply(P_predicted, _HT), S_inv);
-        log+= $"K: {_Matrix.PrintMatrix(K)}\n";
-        
     }
 
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class _Matrix
+public class _Matrix2
 {
     public static Matrix4x4 Add(Matrix4x4 m1, Matrix4x4 m2) {
         Matrix4x4 result = new Matrix4x4();

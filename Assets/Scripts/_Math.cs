@@ -13,6 +13,23 @@ public class _Quaternion
         matrix = new float[,]{{w}, {x}, {y}, {z}};
     }
 
+    public _Quaternion(float[,] m){
+
+        int rowsA = m.GetLength(0);
+        int colsA = m.GetLength(1);
+
+        if (rowsA != 4 || colsA != 1) {
+            throw new ArgumentException("Quaternion should has structure 4x1");
+        }
+
+        matrix = m;
+    }
+
+    public float this[int row, int column] {
+        get { return matrix[row, column]; }
+        set { matrix[row, column] = value; }
+    }
+
     public float w{
         get { return matrix[0,0]; }
         set { matrix[0,0] = value; }
@@ -37,6 +54,21 @@ public class _Quaternion
         return (i < 2)? matrix.GetLength(i) : 0;
     }
 
+    
+    public _Matrix T{
+        get { return _Matrix.Transpose(matrix); }
+    }
+
+    public static _Quaternion operator +( _Quaternion q1, _Quaternion q2) {
+
+        float[,] result = new float[4, 1];
+        for (int i = 0; i < 4; i++){
+                result[i, 0] = q1[i, 0] + q2[i, 0];
+        }
+        return new _Quaternion(result);
+    }
+
+
     public string Print(){
         int rowsA = GetLength(0);
         int colsA = GetLength(1);
@@ -54,17 +86,11 @@ public class _Quaternion
 }
 
 
-public class _Vector
-{
-
-}
-
-
-public class _Matrix2
+public class _Matrix
 {
     public float[,] matrix;
 
-    public _Matrix2(float[,] matrix){
+    public _Matrix(float[,] matrix){
         this.matrix = matrix;
     }   
 
@@ -81,11 +107,11 @@ public class _Matrix2
 
 //------------------TRANSPOSE---------------------------------------
 
-    public _Matrix2 T{
-        get { return Transpose(this); }
+    public _Matrix T{
+        get { return Transpose(this.matrix); }
     }
 
-    public static _Matrix2 Transpose(_Matrix2 A){
+    public static _Matrix Transpose(float[,] A){
         int rows = A.GetLength(0);
         int cols = A.GetLength(1);
 
@@ -96,22 +122,23 @@ public class _Matrix2
                 transposedMatrix[j, i] = A[i, j];
             }
         }
-        return new _Matrix2(transposedMatrix);
+        return new _Matrix(transposedMatrix);
     }
+    
 
 //---------------------------------------------------------------------
 
 
-    public static _Matrix2 Identity(int n){
+    public static _Matrix Identity(int n){
         float[,] result = new float[n, n];
         for (int i = 0; i < n; i++){
             result[i, i] = 1;
         }
-        return new _Matrix2(result);
+        return new _Matrix(result);
     }
 
 
-    public static _Matrix2 operator *( _Matrix2 A, _Matrix2 B) {
+    public static _Matrix operator *( _Matrix A, _Matrix B) {
         int rowsA = A.GetLength(0);
         int colsA = A.GetLength(1);
         int rowsB = B.GetLength(0);
@@ -132,10 +159,36 @@ public class _Matrix2
             }
         }
 
-        return new _Matrix2(result);
+        return new _Matrix(result);
     }
 
-    public static _Matrix2 operator +( _Matrix2 A, _Matrix2 B) {
+    
+    public static _Quaternion operator *( _Matrix A, _Quaternion Q) {
+        int rowsA = A.GetLength(0);
+        int colsA = A.GetLength(1);
+        int rowsB = Q.GetLength(0);
+
+        if (colsA != rowsB) {
+            throw new ArgumentException("The number of columns in the first matrix must be equal to the number of rows in the second matrix.");
+        }
+
+        float[,] result = new float[rowsA, 1];
+
+        for (int i = 0; i < rowsA; i++){
+            result[i, 0] = 0;
+            for (int j = 0; j < colsA; j++){
+                result[i, 0] += A[i, j] * Q[j, 0];
+            }
+            
+        }
+
+        return new _Quaternion(result);
+    }
+
+
+
+
+    public static _Matrix operator +( _Matrix A, _Matrix B) {
         int rowsA = A.GetLength(0);
         int colsA = A.GetLength(1);
         int rowsB = B.GetLength(0);
@@ -153,13 +206,34 @@ public class _Matrix2
             }
         }
 
-        return new _Matrix2(result);
+        return new _Matrix(result);
+    }
+
+    public static _Matrix operator - (_Matrix A, _Matrix B) {
+        int rowsA = A.GetLength(0);
+        int colsA = A.GetLength(1);
+        int rowsB = B.GetLength(0);
+        int colsB = B.GetLength(1);
+
+        if (colsA != colsB || rowsA != rowsB) {
+            throw new ArgumentException("The number of rows/columns in the first matrix must be equal in the second matrix.");
+        }
+
+        float[,] result = new float[rowsA, colsB];
+
+        for (int i = 0; i < rowsA; i++){
+            for (int j = 0; j < colsA; j++){
+                result[i, j] = A[i, j] - B[i, j];
+            }
+        }
+
+        return new _Matrix(result);
     }
 
 
 
 //------------------SCALE BY VALUE---------------------------------------
-    private static _Matrix2 MultiplyByScalar(_Matrix2 matrix, float scalar) {
+    private static _Matrix MultiplyByScalar(_Matrix matrix, float scalar) {
         int rows = matrix.GetLength(0);
         int cols = matrix.GetLength(1);
         float[,] result = new float[rows, cols];
@@ -168,14 +242,14 @@ public class _Matrix2
                 result[i, j] = matrix[i, j] * scalar;
             }
         }
-        return new _Matrix2(result);
+        return new _Matrix(result);
     }
 
-    public static _Matrix2 operator *( _Matrix2 matrix, float scalar){
+    public static _Matrix operator *( _Matrix matrix, float scalar){
         return MultiplyByScalar(matrix, scalar);
     }
 
-    public static _Matrix2 operator *(float scalar, _Matrix2 matrix){
+    public static _Matrix operator *(float scalar, _Matrix matrix){
         return MultiplyByScalar(matrix, scalar);
     }
 //---------------------------------------------------------------------

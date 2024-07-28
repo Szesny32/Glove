@@ -11,10 +11,12 @@ public class Test : MonoBehaviour
         //ScalingTest();
         //Debug.Log(new _Quaternion(1, 2, 3, 4).Print());
         //Debug.Log(new _Quaternion(1, 2, 3, 4).z);
-        //TransposeTest();
+        //TransposeTest();s
         //AddTest();
-        
-        
+        //SubtractTest();        
+        //MultiplicationTest2();
+        //Debug.Log(new _Quaternion(1, 2, 3, 4).T.Print());
+        AddTest2();
     }
 
 
@@ -81,4 +83,54 @@ public class Test : MonoBehaviour
         _Matrix2 C = A+B;
         Debug.Log(C.Print());
     }
+
+        public void SubtractTest(){
+        _Matrix2 A = new _Matrix2(new float[,]{
+            {1, 2, 3, 4},
+            {5, 6, 7, 8},
+            {9, 10, 11, 12},
+            {13, 14, 15, 16}});
+
+        _Matrix2 C = A-_Matrix2.Identity(4);
+        Debug.Log(C.Print());
+    }
+
+  public void MultiplicationTest2(){
+        _Matrix2 A = new _Matrix2(new float[,]{
+            {1, 2, 3, 4},
+            {5, 6, 7, 8},
+            {9, 10, 11, 12},
+            {13, 14, 15, 16}});
+
+        _Quaternion Q1 = new _Quaternion(new float[,]{
+            {10},
+            {20},
+            {30},
+            {40}
+        });
+
+
+        _Quaternion Q2 = A*Q1;
+        Debug.Log(Q2.Print());
+    }
+
+
+    public void AddTest2(){
+          _Quaternion Q1 = new _Quaternion(new float[,]{
+            {10},
+            {20},
+            {30},
+            {40}
+        });
+
+        _Quaternion Q2 = new _Quaternion(new float[,]{
+            {1},
+            {2},
+            {3},
+            {4}
+        });
+        _Quaternion C = Q1+Q2;
+        Debug.Log(C.Print());
+    }
+
 }
