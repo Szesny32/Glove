@@ -7,7 +7,7 @@ public class Test : MonoBehaviour
     void Start()
     {
         //MultiplicationTest();
-        //Debug.Log(_Matrix2.Identity(6).Print());
+        //Debug.Log(_Matrix.Identity(6).Print());
         //ScalingTest();
         //Debug.Log(new _Quaternion(1, 2, 3, 4).Print());
         //Debug.Log(new _Quaternion(1, 2, 3, 4).z);
@@ -21,41 +21,41 @@ public class Test : MonoBehaviour
 
 
     public void MultiplicationTest(){
-        _Matrix2 A = new _Matrix2(new float[,]{
+        _Matrix A = new _Matrix(new float[,]{
             {1, 2, 3, 4},
             {5, 6, 7, 8},
             {9, 10, 11, 12},
             {13, 14, 15, 16}});
 
-        _Matrix2 B = new _Matrix2(new float[,]{
+        _Matrix B = new _Matrix(new float[,]{
             {17, 18, 19, 20},
             {21, 22, 23, 24},
             {25, 26, 27, 28},
             {29, 30, 31, 32}});
 
-        _Matrix2 C = A*B;
+        _Matrix C = A*B;
         Debug.Log(C.Print());
     }
 
 
     public void ScalingTest(){
-        _Matrix2 A = new _Matrix2(new float[,]{
+        _Matrix A = new _Matrix(new float[,]{
             {1, 2, 3, 4},
             {5, 6, 7, 8},
             {9, 10, 11, 12},
             {13, 14, 15, 16}});
 
 
-        _Matrix2 B = 2f * A;
+        _Matrix B = 2f * A;
         Debug.Log(B.Print());
 
-         _Matrix2 C =  A * 3f;
+         _Matrix C =  A * 3f;
         Debug.Log(C.Print());
     }
 
     
     public void TransposeTest(){
-        _Matrix2 A = new _Matrix2(new float[,]{
+        _Matrix A = new _Matrix(new float[,]{
             {1, 2, 3, 4},
             {5, 6, 7, 8},
             {9, 10, 11, 12},
@@ -68,35 +68,35 @@ public class Test : MonoBehaviour
 
 
     public void AddTest(){
-        _Matrix2 A = new _Matrix2(new float[,]{
+        _Matrix A = new _Matrix(new float[,]{
             {1, 2, 3, 4},
             {5, 6, 7, 8},
             {9, 10, 11, 12},
             {13, 14, 15, 16}});
 
-        _Matrix2 B = new _Matrix2(new float[,]{
+        _Matrix B = new _Matrix(new float[,]{
             {17, 18, 19, 20},
             {21, 22, 23, 24},
             {25, 26, 27, 28},
             {29, 30, 31, 32}});
 
-        _Matrix2 C = A+B;
+        _Matrix C = A+B;
         Debug.Log(C.Print());
     }
 
         public void SubtractTest(){
-        _Matrix2 A = new _Matrix2(new float[,]{
+        _Matrix A = new _Matrix(new float[,]{
             {1, 2, 3, 4},
             {5, 6, 7, 8},
             {9, 10, 11, 12},
             {13, 14, 15, 16}});
 
-        _Matrix2 C = A-_Matrix2.Identity(4);
+        _Matrix C = A-_Matrix.Identity(4);
         Debug.Log(C.Print());
     }
 
   public void MultiplicationTest2(){
-        _Matrix2 A = new _Matrix2(new float[,]{
+        _Matrix A = new _Matrix(new float[,]{
             {1, 2, 3, 4},
             {5, 6, 7, 8},
             {9, 10, 11, 12},

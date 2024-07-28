@@ -27,40 +27,21 @@ public class EKF : AttitudeEstimator
     );
 
 
-
-    //The measurement noise covariance matrix
-    private _Matrix R = new _Matrix( new float[,]{
-            {Mathf.Pow(acceleromterNoise.x, 2), 0, 0, 0, 0, 0},
-            {0, Mathf.Pow(acceleromterNoise.y, 2), 0, 0, 0, 0},
-            {0, 0, Mathf.Pow(acceleromterNoise.z, 2), 0, 0, 0},
-            {0, 0, 0, Mathf.Pow(magnetometerNoise.x, 2), 0, 0},
-            {0, 0, 0, 0, Mathf.Pow(magnetometerNoise.y, 2), 0},
-            {0, 0, 0, 0, 0, Mathf.Pow(magnetometerNoise.z, 2)}
-    });
-
-
-    float[,] _H;
-    float[,] v;
-    float[,] K;
+    _Matrix _H;
+    _Matrix v;
+    _Matrix K;
 
 
     public override void UpdateOrientation(){
         PredictionStep();
         CorrectionStep();
 
-        float[,] correction = _Matrix.Multiply(K, v);
+        _Quaternion correction = (K * v).toQuaternion();
+        state = state_predicted + correction;
 
-        state = new Vector4( 
-            state_predicted[0] + correction[0,0],
-            state_predicted[1] + correction[1,0],
-            state_predicted[2] + correction[2,0],
-            state_predicted[3] + correction[3,0]
-        );
-        transform.rotation = new Quaternion(state[1], state[2], state[3], state[0]).normalized;
+        transform.rotation = new Quaternion(state[1,0], state[2,0], state[3,0], state[0,0]).normalized;
 
-        
-        float[,] newP = _Matrix.Multiply(_Matrix.Subtract(_Matrix.Identity(), _Matrix.Multiply(K, _H)), P_predicted);
-        P_predicted = _Matrix.ToMatrix4x4(newP);
+        P = (_Matrix.Identity(4) - K *_H) * P_predicted;
 
     }
 
@@ -93,7 +74,7 @@ public class EKF : AttitudeEstimator
     }
 
     private _Matrix FJacobian(Vector3 w, float dt){
-        Vector F = w * (dt/2);
+        Vector3 F = w * (dt/2);
         return new _Matrix(
             new float[,]{
                 {1, -F.x, -F.y, -F.z},
@@ -140,7 +121,7 @@ public class EKF : AttitudeEstimator
 
         Vector3 a = acceleration.normalized;
         Vector3 m = magneticField.normalized;
-        _Matrix z = NEW _Matrix(new float[,]{
+        _Matrix z = new _Matrix(new float[,]{
             { a.x } ,
             { a.y } ,
             { a.z } ,
@@ -154,22 +135,25 @@ public class EKF : AttitudeEstimator
         v = z - h(state_predicted);
 
 
-   
-
-
         _H = H(state_predicted);
 
-        float[,] _HT = _Matrix.Transpose(_H);
-
-        float[,] S = _Matrix.Add(_Matrix.Multiply(_Matrix.Multiply(_H, P_predicted), _HT), R); 
+        //The measurement noise covariance matrix
+            _Matrix R = new _Matrix( new float[,]{
+        {Mathf.Pow(acceleromterNoise.x, 2), 0, 0, 0, 0, 0},
+        {0, Mathf.Pow(acceleromterNoise.y, 2), 0, 0, 0, 0},
+        {0, 0, Mathf.Pow(acceleromterNoise.z, 2), 0, 0, 0},
+        {0, 0, 0, Mathf.Pow(magnetometerNoise.x, 2), 0, 0},
+        {0, 0, 0, 0, Mathf.Pow(magnetometerNoise.y, 2), 0},
+        {0, 0, 0, 0, 0, Mathf.Pow(magnetometerNoise.z, 2)}
+    });
+        _Matrix S = _H * P_predicted * _H.T + R;
 
         for (int i = 0; i < S.GetLength(0); i++) {
             S[i, i] += 1e-6f;
         }
-        float[,] S_inv = _Matrix.InvertMatrix(S);
-        K = _Matrix.Multiply(_Matrix.Multiply(P_predicted, _HT), S_inv);
 
-        
+        K = P_predicted * _H.T * S. Inv;
+    
     }
 
     private _Matrix h(_Quaternion q){
@@ -177,12 +161,12 @@ public class EKF : AttitudeEstimator
         float qy2 = q.y * q.y;
         float qz2 = q.z * q.z;
 
-        float qwqx = qw * qx;
-        float qwqy = qw * qy;
-        float qwqz = qw * qz;
-        float qxqy = qx * qy;
-        float qxqz = qx * qz;
-        float qyqz = qy * qz;
+        float qwqx = q.w * q.x;
+        float qwqy = q.w * q.y;
+        float qwqz = q.w * q.z;
+        float qxqy = q.x * q.y;
+        float qxqz = q.x * q.z;
+        float qyqz = q.y * q.z;
 
         float[,] result = new float[,]{
             {g.x*(0.5f - qy2 - qz2) + g.y*(qwqz + qxqy) + g.z*(qxqz - qwqy)},
@@ -195,21 +179,17 @@ public class EKF : AttitudeEstimator
         return 2 * new _Matrix(result);
     }
 
-    private float[,] H(Vector4 q){
-
-        (float qw, float qx, float qy, float qz) = (q[0], q[1], q[2], q[3]);
-
+    private _Matrix H(_Quaternion q){
         //[TODO]: NEED TO OPTIMALIZE - IF IT IS ZERO NOW - WHY MULTIPLY IT FURTHER
         float[,] result = new float[,]{
-            {g.x*qw  +g.y*qz   -g.z*qy,       g.x*qx  +g.y*qy  +g.z*qz,        -g.x*qy  +g.y*qx  -g.z*qw,        -g.x*qz  +g.y*qw  +g.z*qx},
-            {-g.x*qz   +g.y*qw   +g.z*qx,       g.x*qy  -g.y*qx  +g.z*qw,        g.x*qx  +g.y*qy  +g.z*qz,        -g.x*qw  -g.y*qz  +g.z*qy},
-            {g.x*qy   -g.y*qx   +g.z*qw,       g.x*qz  -g.y*qw  -g.z*qx,        g.x*qw  +g.y*qz  -g.z*qy,        g.x*qx  +g.y*qy  +g.z*qz},
-            {r.x*qw  +r.y*qz   -r.z*qy,       r.x*qx  +r.y*qy  +r.z*qz,        -r.x*qy  +r.y*qx  -r.z*qw,        -r.x*qz  +r.y*qw  +r.z*qx},
-            {-r.x*qz   +r.y*qw   +r.z*qx,       r.x*qy  -r.y*qx  +r.z*qw,        r.x*qx  +r.y*qy  +r.z*qz,        -r.x*qw  -r.y*qz  +r.z*qy},
-            {r.x*qy   -r.y*qx   +r.z*qw,       r.x*qz  -r.y*qw  -r.z*qx,        r.x*qw  +r.y*qz  -r.z*qy,        r.x*qx  +r.y*qy  +r.z*qz}
+            {g.x*q.w  +g.y*q.z   -g.z*q.y,       g.x*q.x  +g.y*q.y  +g.z*q.z,        -g.x*q.y  +g.y*q.x  -g.z*q.w,        -g.x*q.z  +g.y*q.w  +g.z*q.x},
+            {-g.x*q.z   +g.y*q.w   +g.z*q.x,       g.x*q.y  -g.y*q.x  +g.z*q.w,        g.x*q.x  +g.y*q.y  +g.z*q.z,        -g.x*q.w  -g.y*q.z  +g.z*q.y},
+            {g.x*q.y   -g.y*q.x   +g.z*q.w,       g.x*q.z  -g.y*q.w  -g.z*q.x,        g.x*q.w  +g.y*q.z  -g.z*q.y,        g.x*q.x  +g.y*q.y  +g.z*q.z},
+            {r.x*q.w  +r.y*q.z   -r.z*q.y,       r.x*q.x  +r.y*q.y  +r.z*q.z,        -r.x*q.y  +r.y*q.x  -r.z*q.w,        -r.x*q.z  +r.y*q.w  +r.z*q.x},
+            {-r.x*q.z   +r.y*q.w   +r.z*q.x,       r.x*q.y  -r.y*q.x  +r.z*q.w,        r.x*q.x  +r.y*q.y  +r.z*q.z,        -r.x*q.w  -r.y*q.z  +r.z*q.y},
+            {r.x*q.y   -r.y*q.x   +r.z*q.w,       r.x*q.z  -r.y*q.w  -r.z*q.x,        r.x*q.w  +r.y*q.z  -r.z*q.y,        r.x*q.x  +r.y*q.y  +r.z*q.z}
         };
-
-        return _Matrix.Scale(result, 2);
+        return 2 * new _Matrix(result);
     }
 
 

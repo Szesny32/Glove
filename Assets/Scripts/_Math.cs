@@ -252,7 +252,96 @@ public class _Matrix
     public static _Matrix operator *(float scalar, _Matrix matrix){
         return MultiplyByScalar(matrix, scalar);
     }
+
+
 //---------------------------------------------------------------------
+
+
+    public _Matrix Inv{
+        get { return Invert(this); }
+    }
+
+    public static _Matrix Invert(_Matrix matrix){
+
+        
+        if (matrix.GetLength(0) != matrix.GetLength(1)) {
+            throw new ArgumentException("Matrix to invert should be NxN");
+        }
+
+
+        int n = matrix.GetLength(0);
+        float[,] augmented = new float[n, n * 2];
+
+        // Initialize augmented matrix with the input matrix and the identity matrix
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++){
+                augmented[i, j] = matrix[i, j];
+                augmented[i, j + n] = (i == j) ? 1 : 0;
+            }
+        }
+
+        // Apply Gaussian elimination
+        for (int i = 0; i < n; i++){
+            int pivotRow = i;
+            for (int j = i + 1; j < n; j++){
+                if (Mathf.Abs(augmented[j, i]) > Mathf.Abs(augmented[pivotRow, i])){
+                    pivotRow = j;
+                }
+            }
+
+            if (pivotRow != i){
+                for (int k = 0; k < 2 * n; k++){
+                    float temp = augmented[i, k];
+                    augmented[i, k] = augmented[pivotRow, k];
+                    augmented[pivotRow, k] = temp;
+                }
+            }
+
+            if (Mathf.Abs(augmented[i, i]) < 1e-10){
+                return null;
+            }
+
+            float pivot = augmented[i, i];
+            for (int j = 0; j < 2 * n; j++){
+                augmented[i, j] /= pivot;
+            }
+
+            for (int j = 0; j < n; j++){
+                if (j != i){
+                    float factor = augmented[j, i];
+                    for (int k = 0; k < 2 * n; k++){
+                        augmented[j, k] -= factor * augmented[i, k];
+                    }
+                }
+            }
+        }
+
+        float[,] result = new float[n, n];
+        for (int i = 0; i < n; i++){
+            for (int j = 0; j < n; j++){
+                result[i, j] = augmented[i, j + n];
+            }
+        }
+
+        return new _Matrix(result);
+    }
+
+
+
+    
+    public _Quaternion toQuaternion(){
+        int rowsA = GetLength(0);
+        int colsA = GetLength(1);
+
+        if(rowsA != 4 || colsA != 1){
+            throw new ArgumentException("Matrix should has structure 4x1 to convert it to Quaternion"); 
+        }
+
+        return new _Quaternion(this.matrix);
+
+
+    }
 
     public string Print(){
         int rowsA = GetLength(0);
