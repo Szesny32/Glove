@@ -5,8 +5,6 @@ using UnityEngine;
 
 public enum SensorMode
 {
-    GYROSCOPE,
-    ACCELEROMETER,
     ACC_AND_MAG,
     COMPLEMENTARY_FILTER,
     KALMAN_FILTER
@@ -81,13 +79,7 @@ public class IMU2 : MonoBehaviour
 
 
     void UpdateOrientation(){
-        if(mode == SensorMode.GYROSCOPE){
-            GyroscopeMode();
-        }
-        else if(mode == SensorMode.ACCELEROMETER){
-            AcceleromterMode();
-        }
-        else if(mode == SensorMode.ACC_AND_MAG){
+        if(mode == SensorMode.ACC_AND_MAG){
             AccMagMode();
         }
         else if(mode == SensorMode.COMPLEMENTARY_FILTER){
@@ -122,23 +114,6 @@ public class IMU2 : MonoBehaviour
         return (angle1, angle2);
     }
     
-
-
-    private void GyroscopeMode(){
-        Vector3 bias = removeBias? gyroBias : Vector3.zero;
-        Vector3 angularVelocity = (gyroscope.Read() * Time.deltaTime - bias)  * Mathf.Rad2Deg;
-        Quaternion dQ = Quaternion.AngleAxis(angularVelocity.magnitude, angularVelocity.normalized);
-        transform.rotation *= dQ; 
-    }
-
-    private void AcceleromterMode(){
-        Vector3 bias = removeBias? accBias: Vector3.zero;
-        Vector3 acceleration = (acceleromter.Read() - bias) / g;
-        Vector3 eulerAngles = Vector3.zero;
-        eulerAngles.x = ( -Mathf.Atan2(acceleration.z, Mathf.Sqrt(Mathf.Pow(acceleration.x, 2) + Mathf.Pow(acceleration.y, 2))) * Mathf.Rad2Deg + 360f) % 360f;  
-        eulerAngles.z = (Mathf.Atan2 (acceleration.x, acceleration.y) * Mathf.Rad2Deg+ 360f) % 360f;
-        transform.rotation = Quaternion.Euler(eulerAngles);
-    }
 
     private void AccMagMode(){
         Vector3 bias_acc = removeBias? accBias : Vector3.zero;

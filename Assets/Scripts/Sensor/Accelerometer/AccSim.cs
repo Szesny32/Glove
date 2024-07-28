@@ -29,11 +29,15 @@ public class AccSim : MonoBehaviour
     {
 
         Quaternion q = transform.rotation;
-        acceleration_gt = acceleration = new Vector3(
-            2f*(q.x*q.y + q.w*q.z), 
-            -q.x*q.x + q.y*q.y - q.z*q.z + q.w*q.w,
-            2f*(q.y*q.z - q.x*q.w)
-        ) * g;
+       acceleration_gt = acceleration = new Vector3(
+           2f*(q.x*q.y + q.w*q.z), 
+           -q.x*q.x + q.y*q.y - q.z*q.z + q.w*q.w,
+           2f*(q.y*q.z - q.x*q.w)
+       ) * g;
+        //acceleration_gt = acceleration = zRot(-q.eulerAngles.x ,xRot(-q.eulerAngles.x, yRot(-q.eulerAngles.y, Vector3.up))) * g;
+       
+
+
 
         if(noisy){
             Vector3 normalNoise = new Vector3(

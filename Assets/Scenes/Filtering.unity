@@ -133,7 +133,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       propertyPath: m_Name
-      value: AccMag-Model
+      value: eCompass
       objectReference: {fileID: 0}
     - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       propertyPath: m_LocalPosition.x
@@ -181,7 +181,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 628831362}
+      addedObject: {fileID: 628831367}
   m_SourcePrefab: {fileID: 100100000, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
 --- !u!1 &171271473 stripped
 GameObject:
@@ -578,7 +578,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
   m_PrefabInstance: {fileID: 164325365}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &628831362
+--- !u!114 &628831367
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -587,23 +587,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 628831357}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 679bd00f4a9eb304e8483e9ea970c88d, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f31e5f9f074cc442b3107f6c0e9f3fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceObj: {fileID: 1935980352}
+  reference: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
+  gyroscopeBias: {x: 0, y: 0, z: 0}
+  gyroscopeNoise: {x: 0, y: 0, z: 0}
   acceleromter: {fileID: 1935980346}
+  acceleromterBias: {x: 0, y: 0, z: 0}
+  acceleromterNoise: {x: 0, y: 0, z: 0}
   magnetometer: {fileID: 1935980347}
-  mode: 2
-  correctMaterial: {fileID: 2100000, guid: 30197a51d46bf4a48aa89d4057fa49ee, type: 2}
-  incorrectMaterial: {fileID: 2100000, guid: dce3a789f595f224a85f5cf4f2e6667d, type: 2}
+  magnetometerNoise: {x: 0, y: 0, z: 0}
+  correctMaterial: {fileID: 2100000, guid: c4f7fd0f87038104d8182f60012da5fc, type: 2}
+  incorrectMaterial: {fileID: 2100000, guid: 3acbe7013301a8d4e97b75a27135265e, type: 2}
   angleThreshold: 2
   removeBiasMode: 0
-  removeBias: 0
-  gyroBias: {x: 0, y: 0, z: 0}
-  accBias: {x: 0, y: 0, z: 0}
-  gyroNoise: {x: 0, y: 0, z: 0}
-  accNoise: {x: 0, y: 0, z: 0}
 --- !u!1001 &636780799
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -998,7 +997,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       propertyPath: m_Name
-      value: Acc-Model
+      value: Tilt
       objectReference: {fileID: 0}
     - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1046,7 +1045,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1988757213}
+      addedObject: {fileID: 1988757218}
   m_SourcePrefab: {fileID: 100100000, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
 --- !u!1 &1590888008
 GameObject:
@@ -1252,10 +1251,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UI: {fileID: 420802853}
-  noisy: 1
+  noisy: 0
   isBias: 0
   bias: {x: 0.014, y: 0.072, z: 0.00026}
-  noise: {x: 10, y: 10, z: 10}
+  noise: {x: 0.27, y: 0.3, z: 0.1}
 --- !u!114 &1935980345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1282,7 +1281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UI: {fileID: 938265370}
-  noisy: 1
+  noisy: 0
   isBias: 0
   bias: {x: 0.15, y: 0.15, z: -0.25}
   noise: {x: 0.42, y: 0.36, z: 0.15}
@@ -1440,7 +1439,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
   m_PrefabInstance: {fileID: 945545535}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1988757213
+--- !u!114 &1988757218
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1449,23 +1448,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 1988757208}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 679bd00f4a9eb304e8483e9ea970c88d, type: 3}
+  m_Script: {fileID: 11500000, guid: 04158bcce6bb0aa42969b008516a753e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceObj: {fileID: 1935980352}
+  reference: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
+  gyroscopeBias: {x: 0, y: 0, z: 0}
+  gyroscopeNoise: {x: 0, y: 0, z: 0}
   acceleromter: {fileID: 1935980346}
+  acceleromterBias: {x: 0, y: 0, z: 0}
+  acceleromterNoise: {x: 0, y: 0, z: 0}
   magnetometer: {fileID: 1935980347}
-  mode: 1
-  correctMaterial: {fileID: 2100000, guid: 30197a51d46bf4a48aa89d4057fa49ee, type: 2}
-  incorrectMaterial: {fileID: 2100000, guid: dce3a789f595f224a85f5cf4f2e6667d, type: 2}
+  magnetometerNoise: {x: 0, y: 0, z: 0}
+  correctMaterial: {fileID: 2100000, guid: c4f7fd0f87038104d8182f60012da5fc, type: 2}
+  incorrectMaterial: {fileID: 2100000, guid: 3acbe7013301a8d4e97b75a27135265e, type: 2}
   angleThreshold: 2
   removeBiasMode: 0
-  removeBias: 0
-  gyroBias: {x: 0, y: 0, z: 0}
-  accBias: {x: 0, y: 0, z: 0}
-  gyroNoise: {x: 0, y: 0, z: 0}
-  accNoise: {x: 0, y: 0, z: 0}
 --- !u!1 &2083590876
 GameObject:
   m_ObjectHideFlags: 0
