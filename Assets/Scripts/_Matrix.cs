@@ -246,7 +246,7 @@ public class _Matrix
         string result = "";
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < cols; j++) {
-                result +=$"{matrix[i, j],8:F16}"; 
+                result +=$"{matrix[i, j],20:F8}"; 
             }
             result +="\n";
         }
