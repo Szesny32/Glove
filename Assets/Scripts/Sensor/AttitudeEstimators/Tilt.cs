@@ -22,8 +22,6 @@ public class Tilt : AttitudeEstimator{
         cx * sy * cz - sx * cy * sz, //Y
         cx * cy * sz - sx * sy * cz, //Z
         cx * cy * cz + sx * sy * sz  //W
-    );
-        
+    );   
   }
-  
 }

@@ -8,29 +8,33 @@ public class AttitudeEstimator : MonoBehaviour
 
     public GyroSim gyroscope;
     protected Vector3 angularVelocity;
-    public Vector3 gyroscopeBias;
-    public Vector3 gyroscopeNoise;
+    protected Vector3 gyroscopeBias;
+    protected Vector3 gyroscopeNoise;
 
     public AccSim acceleromter;
     protected Vector3 acceleration;
-    public Vector3 acceleromterBias;
-    public Vector3 acceleromterNoise;
+    protected Vector3 acceleromterBias;
+    protected Vector3 acceleromterNoise;
 
     public MagSim magnetometer;
     protected Vector3 magneticField;
-    public Vector3 magnetometerNoise;
+    protected Vector3 magnetometerNoise;
     
     protected Renderer renderer;
-    public Material correctMaterial;
-    public Material incorrectMaterial;
+    private Material correctMaterial;
+    private Material incorrectMaterial;
 
-    public float angleThreshold = 2.0f;
+    private float angleThreshold = .1f;
     protected bool rotationMatch = false;
 
     public bool removeBiasMode = false;
     
     void Start()
     {
+
+        correctMaterial = Resources.Load<Material>("Correct");
+        incorrectMaterial = Resources.Load<Material>("Incorrect");
+
         renderer = GetComponent<Renderer>();
         renderer.material = incorrectMaterial;
         gyroscopeBias = removeBiasMode? gyroscope.GetBias() : Vector3.zero;
@@ -77,6 +81,26 @@ public class AttitudeEstimator : MonoBehaviour
             renderer.material = incorrectMaterial;
         }
 
+    }
+
+    public Vector3 zRot(float angle, Vector3 v){
+        float sinZ = Mathf.Sin(angle);
+        float cosZ = Mathf.Cos(angle);
+        return new Vector3(
+            (cosZ * v.x) + (-sinZ * v.y),
+            (sinZ * v.x) + (cosZ * v.y),
+            v.z
+        );
+    }
+
+    public Vector3 xRot(float angle, Vector3 v){
+        float sinX = Mathf.Sin(angle);
+        float cosX = Mathf.Cos(angle);
+        return new Vector3(
+            v.x,
+            (cosX * v.y) + (-sinX * v.z),
+            (sinX * v.y) + (cosX * v.z)
+        );
     }
 
 }
