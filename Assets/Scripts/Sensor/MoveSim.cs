@@ -6,15 +6,24 @@ public class MoveSim : MonoBehaviour
 {
     public float rotationSpeedDegreesPerSecond = 90f; 
     private float timer = 5f;
+    private int state = 0;
+
+    private Vector3[] dir = {Vector3.up, Vector3.right, Vector3.forward};
+
+    private float clock;
     void Update()
     {
+        clock += Time.deltaTime;
+        if(clock > timer){
+            state = (state + 1) % 3; 
+            clock %= timer;
+        }  
+
         float f = (Time.time % timer) > timer/2f ? -1 : 1;
         float angleToRotate = f * rotationSpeedDegreesPerSecond * Time.deltaTime + Mathf.Sin(Time.time)/2;
 
 
-        if(Time.time % 10 > 5)
-            transform.Rotate(Vector3.forward, angleToRotate);
-        else 
-            transform.Rotate(Vector3.up, angleToRotate);
+        transform.Rotate(dir[state], angleToRotate);
+
     }
 }

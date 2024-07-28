@@ -59,7 +59,7 @@ public class EKF : AttitudeEstimator
 
         log+= $"P_predicted: {_Matrix.PrintMatrix(P_predicted)}\n";
 
-        Debug.Log(log);
+        //Debug.Log(log);
     }
 
 
