@@ -10,7 +10,6 @@ public class DataLogger : MonoBehaviour
     public GyroSim gyroscope;
     public AccSim acceleromter;
     public MagSim magnetometer;
-    public IMU2 imu;
     public bool logToFile = false;
     void Start(){
         filePath = "C:/Users/Szesny/Desktop/Magisterka - playground/Sensor.csv";
@@ -39,17 +38,17 @@ public class DataLogger : MonoBehaviour
 
         Vector3 magneticPole = magnetometer.Read();
 
-        Vector3 estimated = imu.GetAngle();
+        //Vector3 estimated = imu.GetAngle();
 
-        string row = $"{Time.deltaTime};";
-        row += $"{groundTrueAngle.x};{groundTrueAngle.y};{groundTrueAngle.z};";
-        row += $"{angularVelocity.x};{angularVelocity.y};{angularVelocity.z};";
-        row += $"{angularVelocity_gt.x};{angularVelocity_gt.y};{angularVelocity_gt.z};";
-        row += $"{acceleration.x};{acceleration.y};{acceleration.z};";
-        row += $"{acceleration_gt.x};{acceleration_gt.y};{acceleration_gt.z};";
-        row += $"{magneticPole.x};{magneticPole.y};{magneticPole.z};";
-        row += $"{estimated.x};{estimated.y};{estimated.z}";
-        writer.WriteLine(row);
+        // string row = $"{Time.deltaTime};";
+        // row += $"{groundTrueAngle.x};{groundTrueAngle.y};{groundTrueAngle.z};";
+        // row += $"{angularVelocity.x};{angularVelocity.y};{angularVelocity.z};";
+        // row += $"{angularVelocity_gt.x};{angularVelocity_gt.y};{angularVelocity_gt.z};";
+        // row += $"{acceleration.x};{acceleration.y};{acceleration.z};";
+        // row += $"{acceleration_gt.x};{acceleration_gt.y};{acceleration_gt.z};";
+        // row += $"{magneticPole.x};{magneticPole.y};{magneticPole.z};";
+        // row += $"{estimated.x};{estimated.y};{estimated.z}";
+        // writer.WriteLine(row);
     }
 
 

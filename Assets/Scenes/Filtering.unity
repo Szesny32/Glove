@@ -1220,7 +1220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UI: {fileID: 420802853}
-  noisy: 1
+  noisy: 0
   isBias: 0
   bias: {x: 0.014, y: 0.072, z: 0.00026}
   noise: {x: 0.48, y: 0.78, z: 0.67}
@@ -1250,7 +1250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UI: {fileID: 938265370}
-  noisy: 1
+  noisy: 0
   isBias: 0
   bias: {x: 0.15, y: 0.15, z: -0.25}
   noise: {x: 0.42, y: 0.36, z: 0.15}
@@ -1266,7 +1266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d5dda5c134a79a47b8f928404b72e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noisy: 1
+  noisy: 0
   noise: {x: 1, y: 0.5, z: 1.12}
   UI: {fileID: 2083590878}
 --- !u!4 &1935980352 stripped
