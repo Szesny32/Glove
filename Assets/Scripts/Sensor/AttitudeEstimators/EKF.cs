@@ -52,7 +52,7 @@ public class EKF : AttitudeEstimator
         PredictionStep();
         CorrectionStep();
 
-        Debug.Log(K.Print());
+        //Debug.Log(K.Print());
         _Quaternion correction = (K * v).toQuaternion();
         state = state_predicted + correction;
         state.Normalize();

@@ -17,7 +17,8 @@ public class Test : MonoBehaviour
         //MultiplicationTest2();
         //Debug.Log(new _Quaternion(1, 2, 3, 4).T.Print());
         //AddTest2();
-        InverseTest();
+        //InverseTest();
+        StackTest();
 
     }
 
@@ -152,6 +153,25 @@ public class Test : MonoBehaviour
             {2, 0, 0, 0, 4, 0},   
             {0, 0, 0, 0, 0, 6} });
         Debug.Log(B.Inv.Print());
+    }
+
+
+    
+    public void StackTest(){
+        _Matrix A = new _Matrix(new float[,]{
+            {1, 2, 3, 4},
+            {5, 6, 7, 8},
+            {9, 10, 11, 12},
+            {13, 14, 15, 16}});
+
+        _Matrix B = new _Matrix(new float[,]{
+            {17, 18, 19, 20},
+            {21, 22, 23, 24},
+            {25, 26, 27, 28},
+            {29, 30, 31, 32}});
+
+        _Matrix C = _Matrix.StackByRows(A, B);
+        Debug.Log(C.Print());
     }
 
 

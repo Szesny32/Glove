@@ -6,16 +6,24 @@ public class MoveSim : MonoBehaviour
 {
     public float rotationSpeedDegreesPerSecond = 90f; 
     private float timer = 5f;
-    private int state = 0;
-
-    private Vector3[] dir = {Vector3.up, Vector3.right, Vector3.forward};
-
     private float clock;
+    public int state = 0;
+
+    private Vector3[] direction = {Vector3.forward, Vector3.right, Vector3.up};   
+    public Vector3 active;
+
+    void Start(){
+        active = direction[state];
+    }
+
+
+    
     void Update()
     {
         clock += Time.deltaTime;
         if(clock > timer){
-            state = (state + 1) % 3; 
+            state = (state + 1) % direction.Length; 
+            active = direction[state];
             clock %= timer;
         }  
 
@@ -23,7 +31,7 @@ public class MoveSim : MonoBehaviour
         float angleToRotate = f * rotationSpeedDegreesPerSecond * Time.deltaTime + Mathf.Sin(Time.time)/2;
 
 
-        transform.Rotate(dir[state], angleToRotate);
+        transform.Rotate(active, angleToRotate, Space.Self);
 
     }
 }

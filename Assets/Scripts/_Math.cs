@@ -79,6 +79,46 @@ public class _Quaternion
         return new _Quaternion(result);
     }
 
+        public static _Quaternion operator -( _Quaternion q1, _Quaternion q2) {
+
+        float[,] result = new float[4, 1];
+        for (int i = 0; i < 4; i++){
+                result[i, 0] = q1[i, 0] - q2[i, 0];
+        }
+        return new _Quaternion(result);
+    }
+
+
+
+    public _Matrix toDirectionCosineMatrix(){
+        float[,] result = new float[,]{
+            {w*w + x*x - y*y - z*z,     2*(x*y - w*z),              2*(x*z + w*y)},
+            {2*(x*y + w*z),             w*w - x*x + y*y - z*z,      2*(y*z + w*x)},
+            { 2*(x*z - w*y),            2*((w*x + y*z)),            w*w - x*x - y*y + z*z}
+        };
+        return new _Matrix(result);
+    }
+
+//------------------SCALE BY VALUE---------------------------------------
+    private static _Quaternion MultiplyByScalar(_Quaternion q, float scalar) {
+        float[,] result = new float[4, 1];
+        for (int i = 0; i < 4; i++) {
+                result[i, 0] = q[i, 0] * scalar;
+        }
+        return new _Quaternion(result);
+    }
+
+    public static _Quaternion operator *( _Quaternion q, float scalar){
+        return MultiplyByScalar(q, scalar);
+    }
+
+    public static _Quaternion operator *(float scalar, _Quaternion q){
+        return MultiplyByScalar(q, scalar);
+    }
+
+
+//---------------------------------------------------------------------
+
 
     public string Print(){
         int rowsA = GetLength(0);
@@ -139,7 +179,7 @@ public class _Matrix
 
 //---------------------------------------------------------------------
 
-
+//------------------IDENTITY---------------------------------------
     public static _Matrix Identity(int n){
         float[,] result = new float[n, n];
         for (int i = 0; i < n; i++){
@@ -147,8 +187,11 @@ public class _Matrix
         }
         return new _Matrix(result);
     }
+//---------------------------------------------------------------------
 
 
+
+//------------------MULTIPLY---------------------------------------
     public static _Matrix operator *( _Matrix A, _Matrix B) {
         int rowsA = A.GetLength(0);
         int colsA = A.GetLength(1);
@@ -196,7 +239,9 @@ public class _Matrix
         return new _Quaternion(result);
     }
 
+//---------------------------------------------------------------------
 
+//------------------ADD------------------------------------------
 
     public static _Matrix operator +( _Matrix A, _Matrix B) {
         int rowsA = A.GetLength(0);
@@ -219,6 +264,9 @@ public class _Matrix
         return new _Matrix(result);
     }
 
+//---------------------------------------------------------------------
+
+//------------------SUBTRACT------------------------------------------
     public static _Matrix operator - (_Matrix A, _Matrix B) {
         int rowsA = A.GetLength(0);
         int colsA = A.GetLength(1);
@@ -338,7 +386,36 @@ public class _Matrix
     }
 
 
+//---------------------------------------------------------------------
+    public static _Matrix StackByRows(_Matrix A, _Matrix B){
+        int colsA = A.GetLength(1);
+        int colsB = B.GetLength(1);
 
+        if(colsA != colsB ){
+            throw new ArgumentException("The matrix should have the same number of columns to be able to stack them"); 
+        }
+
+
+        int rowsA = A.GetLength(0);
+        int rowsB = B.GetLength(0);
+        float[,] result = new float[rowsA + rowsB, colsA];
+
+        for (int i = 0; i < rowsA; i++){
+            for (int j = 0; j < colsA; j++){
+                result[i, j] = A[i, j];
+            }
+        }
+
+        for (int i = rowsA; i < rowsA + rowsB; i++){
+            for (int j = 0; j < colsA; j++){
+                result[i, j] = B[i - rowsA, j];
+            }
+        }
+
+        return new _Matrix(result);
+
+    }
+//------------------CONVERSIONS------------------------------------------
     
     public _Quaternion toQuaternion(){
         int rowsA = GetLength(0);
@@ -351,6 +428,9 @@ public class _Matrix
 
     }
 
+//---------------------------------------------------------------------
+
+//------------------OTHER------------------------------------------
     public string Print(){
         int rowsA = GetLength(0);
         int colsA = GetLength(1);

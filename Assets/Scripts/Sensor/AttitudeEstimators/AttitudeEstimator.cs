@@ -25,7 +25,7 @@ public class AttitudeEstimator : MonoBehaviour
     private Material incorrectMaterial;
 
     public float angleDifference;
-    private float angleThreshold = 1f;
+    private float angleThreshold = 5f;
     protected bool rotationMatch = false;
 
     public bool removeBiasMode = false;
