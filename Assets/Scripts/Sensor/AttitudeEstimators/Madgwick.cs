@@ -8,7 +8,6 @@ public class Madgwick : AttitudeEstimator
     //https://ahrs.readthedocs.io/en/latest/filters/madgwick.html
     //Orientation as solution of Gradient Descent
 
-    
     //METHOD: analytically derived and optimised gradient-descent algorithm 
     //SUBSTRATE: accelerometer and magnetometer data 
     //PRODUCT: direction of the gyroscope measurement error 
@@ -17,21 +16,17 @@ public class Madgwick : AttitudeEstimator
     //A single adjustable parameter defined by observable systems characteristics
     //An analytically derived and optimised gradient-descent algorithm enabling performance at low sampling rates. <----- Low sampling problem(?)
 
-
-
     //earth frame eD = [0, dx, dy, dz]
     //corresponding measured direction in the sensor frame sS = [0, sx, sy, sz]
 
-
     //Gradient Descent Algorithm?
-
 
     _Quaternion Q = new _Quaternion(1, 0, 0, 0);
     
 
     //estimated mean zero gyroscope measurement error of each axis
-    //_Matrix beta; //0.1
-    public float beta = 0.1f;
+
+    public float beta = 0.1f;  //TODO
 
     public override void Init(){
 
@@ -87,8 +82,6 @@ public class Madgwick : AttitudeEstimator
         gradient.Normalize();
         return gradient;
     }
-
-    
 
 
     private _Matrix f(_Quaternion q, Vector3 d, Vector3 s){

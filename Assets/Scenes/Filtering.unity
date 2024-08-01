@@ -606,11 +606,6 @@ MonoBehaviour:
   angleDifference: 0
   removeBiasMode: 0
   beta: 0.1
-  Quaternion:
-  - 1
-  - 0
-  - 0
-  - 0
 --- !u!114 &631984642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -630,11 +625,6 @@ MonoBehaviour:
   angleDifference: 0
   removeBiasMode: 0
   beta: 0.1
-  Quaternion:
-  - 1
-  - 0
-  - 0
-  - 0
 --- !u!1001 &636780799
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1382,7 +1372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UI: {fileID: 420802853}
-  noisy: 1
+  noisy: 0
   isBias: 0
   bias: {x: 0.014, y: 0.072, z: 0.00026}
   noise: {x: 0.48, y: 0.78, z: 0.67}
@@ -1399,7 +1389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeedDegreesPerSecond: 30
-  state: 2
+  state: 1
   active: {x: 0, y: 0, z: 0}
 --- !u!114 &1935980346
 MonoBehaviour:
@@ -1414,7 +1404,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UI: {fileID: 938265370}
-  noisy: 1
+  noisy: 0
   isBias: 0
   bias: {x: 0.15, y: 0.15, z: -0.25}
   noise: {x: 0.42, y: 0.36, z: 0.15}
@@ -1430,7 +1420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d5dda5c134a79a47b8f928404b72e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noisy: 1
+  noisy: 0
   noise: {x: 1, y: 0.5, z: 1.12}
   UI: {fileID: 2083590878}
 --- !u!4 &1935980352 stripped

@@ -50,6 +50,7 @@ public class _Quaternion
         set { matrix[3,0] = value; }
     }
 
+
     public int GetLength(int i){
         return (i < 2)? matrix.GetLength(i) : 0;
     }
@@ -63,6 +64,14 @@ public class _Quaternion
         x /= norm;
         y /= norm;
         z /= norm;
+    }
+
+    public Quaternion Unity(){
+        return new Quaternion(x, y, z, w);
+    }
+
+    public _Quaternion Inverse(){
+        return new _Quaternion(w, -x, -y, -z);
     }
 
     
@@ -92,9 +101,9 @@ public class _Quaternion
 
     public _Matrix toDirectionCosineMatrix(){
         float[,] result = new float[,]{
-            {w*w + x*x - y*y - z*z,     2*(x*y - w*z),              2*(x*z + w*y)},
-            {2*(x*y + w*z),             w*w - x*x + y*y - z*z,      2*(y*z + w*x)},
-            { 2*(x*z - w*y),            2*((w*x + y*z)),            w*w - x*x - y*y + z*z}
+            {w*w + x*x - y*y - z*z,     2*(x*y + w*z),              2*(x*z - w*y)},
+            {2*(x*y - w*z),             w*w - x*x + y*y - z*z,      2*(y*z + w*x)},
+            { 2*(x*z + w*y),            2*(y*z - w*x),            w*w - x*x - y*y + z*z}
         };
         return new _Matrix(result);
     }
