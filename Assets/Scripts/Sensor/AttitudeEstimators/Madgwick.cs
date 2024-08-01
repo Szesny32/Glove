@@ -22,45 +22,39 @@ public class Madgwick : AttitudeEstimator
     //Gradient Descent Algorithm?
 
     _Quaternion Q = new _Quaternion(1, 0, 0, 0);
-    
-
     //estimated mean zero gyroscope measurement error of each axis
 
-    public float beta = 0.1f;  //TODO
+    //public float beta = 0.1f;  //TODO
+    _Matrix beta;
+
 
     public override void Init(){
+        float ex = Mathf.Sqrt(gyroscopeNoise.x);
+        float ey = Mathf.Sqrt(gyroscopeNoise.y);
+        float ez = Mathf.Sqrt(gyroscopeNoise.z);
 
-        
-        // float ex = Mathf.Sqrt(gyroscopeNoise.x);
-        // float ey = Mathf.Sqrt(gyroscopeNoise.y);
-        // float ez = Mathf.Sqrt(gyroscopeNoise.z);
-
-        // beta = Mathf.Sqrt(0.75f) * new _Matrix(new float[,]{
-        //     {1, 0, 0, 0},
-        //     {0, ex, 0, 0},
-        //     {0, 0, ey, 0},
-        //     {0, 0, 0, ez}
-        // });
+        beta = Mathf.Sqrt(0.75f) * new _Matrix(new float[,]{
+            {1, 0, 0, 0},
+            {0, ex, 0, 0},
+            {0, 0, ey, 0},
+            {0, 0, 0, ez}
+        });
     }
 
     public override void UpdateOrientation(){
-
         float dt = Time.deltaTime;
 
-
         _Quaternion Qw = 0.5f * Omega(angularVelocity)*Q;
-
-
+        
         Vector3 g = Vector3.up;
         Vector3 a = acceleration;
 
         Vector3 m = magneticField;
         _Matrix _m = new _Matrix(new float[,]{{m.x}, {m.y}, {m.z}});
         
-
         _Matrix h = Q.toDirectionCosineMatrix().T *_m;
         float hx = h[0,0], hy = h[1,0], hz = h[2,0];
-        Vector3 b = new Vector3(0, 0, Mathf.Sqrt(hx*hx + hz*hz));
+        Vector3 b = new Vector3(0, hy, Mathf.Sqrt(hx*hx + hz*hz));
 
         _Matrix fg = f(Q, g, a);
         _Matrix fb = f(Q, b, m);
@@ -70,11 +64,8 @@ public class Madgwick : AttitudeEstimator
         _Matrix Jb = Jacobian(Q, b);
         _Matrix Jgb = _Matrix.StackByRows(Jg, Jb);
 
-
         Q += (Qw - beta*Gradient(Jgb, fgb)) * dt;
-
-        transform.rotation = new Quaternion(Q.x, Q.y, Q.z, Q.w);
-
+        transform.rotation = Q.Unity();
     }
     
     private _Quaternion Gradient(_Matrix Jgb, _Matrix fgb){
@@ -82,7 +73,6 @@ public class Madgwick : AttitudeEstimator
         gradient.Normalize();
         return gradient;
     }
-
 
     private _Matrix f(_Quaternion q, Vector3 d, Vector3 s){
         float [,] result = new float[,]{ 
@@ -101,7 +91,6 @@ public class Madgwick : AttitudeEstimator
         };
         return new _Matrix(result);
     }
-
 
     private _Matrix Omega(Vector3 w){
         return new _Matrix(

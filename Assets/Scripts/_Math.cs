@@ -58,7 +58,8 @@ public class _Quaternion
     public void Normalize() {
         float norm = (float)Math.Sqrt(w * w + x * x + y * y + z * z);
         if (norm == 0) {
-            throw new InvalidOperationException("Cannot normalize a quaternion with zero length.");
+            //throw new InvalidOperationException("Cannot normalize a quaternion with zero length.");
+            w= x= y= z=0;
         }
         w /= norm;
         x /= norm;

@@ -6,13 +6,24 @@ public class Complementary  : AttitudeEstimator{
 
     [Range(0.0f, 1.0f)]
     public float alpha = 0.98f;
+    public bool slerp = false;
 
     public override void UpdateOrientation(){
 
         Quaternion q1 = _AngularRate();
         Quaternion q2 = _eCompass();
 
-        transform.rotation = Quaternion.Slerp(q1, q2, 1-alpha);
+        if(slerp){
+            transform.rotation = Quaternion.Slerp(q1, q2, 1-alpha);
+        } 
+        else {
+            transform.rotation = new Quaternion(
+                alpha*q1.x + (1-alpha)*q2.x,
+                alpha*q1.y + (1-alpha)*q2.y,
+                alpha*q1.z + (1-alpha)*q2.z,
+                alpha*q1.w + (1-alpha)*q2.w
+            );
+        }
     }
 
     private Quaternion _AngularRate(){
