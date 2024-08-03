@@ -4,16 +4,15 @@ using UnityEngine;
 
 public class MoveSim : MonoBehaviour
 {
-    public float rotationSpeedDegreesPerSecond = 90f; 
+    public float rotationSpeedDegreesPerSecond = 30f; 
     private float timer = 5f;
     private float clock;
-    public int state = 0;
 
-    private Vector3[] direction = {Vector3.forward, Vector3.right, Vector3.up};   
+
     public Vector3 active;
 
     void Start(){
-        active = direction[state];
+        active = new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f)).normalized;
     }
 
 
@@ -22,9 +21,9 @@ public class MoveSim : MonoBehaviour
     {
         clock += Time.deltaTime;
         if(clock > timer){
-            state = (state + 1) % direction.Length; 
-            active = direction[state];
+            active = new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f)).normalized;
             clock %= timer;
+            rotationSpeedDegreesPerSecond = Random.Range(-1.0f, 1.0f) *  360f;
         }  
 
         float f = (Time.time % timer) > timer/2f ? -1 : 1;
