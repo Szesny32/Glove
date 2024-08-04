@@ -25,8 +25,9 @@ public class AttitudeEstimator : MonoBehaviour
     private Material incorrectMaterial;
 
     public float angleDifference;
-    private float angleThreshold = 5f;
+    private float angleThreshold = 2f;
     protected bool rotationMatch = false;
+    protected float rotationMatchTime = 0f;
 
     public bool removeBiasMode = false;
 
@@ -88,8 +89,15 @@ public class AttitudeEstimator : MonoBehaviour
         else if (angleDifference > angleThreshold && rotationMatch){
             rotationMatch = false;
             renderer.material = incorrectMaterial;
+        } else if(angleDifference <= angleThreshold && rotationMatch){
+            rotationMatchTime += Time.deltaTime;
         }
 
+    }
+
+    public float RotationMatchTimeIndicator(){
+        //return 100f * rotationMatchTime / Time.time;
+        return rotationMatchTime;
     }
 
     public Vector3 zRot(float angle, Vector3 v){

@@ -2,33 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class XXX : AttitudeEstimator
+{
 
-public enum ComplementaryType{
-    NORMAL,
-    SLEPR
-}
-public class Complementary  : AttitudeEstimator{
-
-    [Range(0.0f, 1.0f)]
-    public float alpha = 0.98f;
-    public ComplementaryType type;
-
+     private List<Quaternion> quaternionList = new List<Quaternion>();
+private float alpha = 0.98f;
     public override void UpdateOrientation(){
 
-        Quaternion q1 = _AngularRate();
+        
         Quaternion q2 = _eCompass();
+        
 
-        if(type == ComplementaryType.SLEPR){
-            transform.rotation = Quaternion.Slerp(q1, q2, 1-alpha);
-        } 
-        else if(type == ComplementaryType.NORMAL){
-            transform.rotation = new Quaternion(
-                alpha*q1.x + (1-alpha)*q2.x,
-                alpha*q1.y + (1-alpha)*q2.y,
-                alpha*q1.z + (1-alpha)*q2.z,
-                alpha*q1.w + (1-alpha)*q2.w
-            );
-        } 
+        //transform.rotation = q;
+        q2 = Quaternion.Slerp(q2, GetWeightMean(), 0.1f);
+
+        Quaternion q1 = _AngularRate();
+        
+        transform.rotation = Quaternion.Slerp(q1, q2, 1-alpha);
+
+
+
+        AddQuaternion(q2);
+
+
+    }
+
+
+    public void AddQuaternion(Quaternion newQuaternion)
+    {
+        quaternionList.Add(newQuaternion);
+
+        if (quaternionList.Count > 100)
+            quaternionList.RemoveAt(0);
     }
 
     private Quaternion _AngularRate(){
@@ -37,6 +42,20 @@ public class Complementary  : AttitudeEstimator{
         Quaternion q = transform.rotation * dQ;
         return q; 
     }
+
+
+    private Quaternion GetWeightMean(){
+        Quaternion mean = new Quaternion(0, 0, 0, 1);
+
+        float weight = 1;
+        for(int i = quaternionList.Count; i>0; i--){
+        
+            mean = Quaternion.Slerp(mean,quaternionList[i-1], weight);
+            weight*=0.1f;        
+        }
+        return mean;
+    }
+
 
     private Quaternion _eCompass(){
         Vector3 euler = Vector3.zero;
@@ -62,9 +81,4 @@ public class Complementary  : AttitudeEstimator{
         ); 
         return q;
     }
-
-
-
-
-
 }

@@ -13,6 +13,11 @@ public class _Quaternion
         matrix = new float[,]{{w}, {x}, {y}, {z}};
     }
 
+    public _Quaternion(Quaternion q){
+        matrix = new float[,]{{q.w}, {q.x}, {q.y}, {q.z}};
+    }
+
+
     public _Quaternion(float[,] m){
 
         int rowsA = m.GetLength(0);
@@ -75,6 +80,10 @@ public class _Quaternion
         return new _Quaternion(w, -x, -y, -z);
     }
 
+    public _Matrix toMatrix(){
+        return new _Matrix(this.matrix);
+    }
+
     
     public _Matrix T{
         get { return _Matrix.Transpose(matrix); }
@@ -126,7 +135,22 @@ public class _Quaternion
         return MultiplyByScalar(q, scalar);
     }
 
+    private static _Quaternion DivideByScalar(_Quaternion q, float scalar) {
+        float[,] result = new float[4, 1];
+        for (int i = 0; i < 4; i++) {
+            result[i, 0] = q[i, 0] / scalar;
+            
+        }
+        return new _Quaternion(result);
+    }
 
+    public static _Quaternion operator /( _Quaternion q, float scalar){
+        return DivideByScalar(q, scalar);
+    }
+
+    public static _Quaternion operator /( _Quaternion q, int scalar){
+        return DivideByScalar(q, scalar);
+    }
 //---------------------------------------------------------------------
 
 
@@ -155,13 +179,35 @@ public class _Matrix
         this.matrix = matrix;
     }   
 
+    public _Matrix(_Matrix A){
+        int rows = A.GetLength(0);
+        int cols = A.GetLength(1);
+
+        this.matrix = new float[rows, cols];
+
+        for (int i = 0; i < rows; i++){
+            for (int j = 0; j < cols; j++) {
+                matrix[i, j] = A[i, j];
+            }
+        }
+        
+    }   
+
     public float this[int row, int column] {
         get { return matrix[row, column]; }
         set { matrix[row, column] = value; }
     }
 
     public int GetLength(int i){
-        return (i < 2)? matrix.GetLength(i) : 0;
+        return (i < 2)? matrix.GetLength(i) : -1;
+    }
+
+    public int rows{
+        get { return matrix.GetLength(0); }
+    }
+
+    public int cols{
+        get { return matrix.GetLength(1); }
     }
 
 
@@ -199,6 +245,15 @@ public class _Matrix
     }
 //---------------------------------------------------------------------
 
+   public static _Matrix Homogen(int I, int J, float value = 0f){
+        float[,] result = new float[I, J];
+        for (int i = 0; i < I; i++){
+            for (int j = 0; j < J; j++) {
+                result[i, j] = value;
+            }
+        }
+        return new _Matrix(result);
+    }
 
 
 //------------------MULTIPLY---------------------------------------
@@ -322,6 +377,27 @@ public class _Matrix
     }
 
 
+
+    private static _Matrix DivideByScalar(_Matrix matrix, float scalar) {
+        int rows = matrix.GetLength(0);
+        int cols = matrix.GetLength(1);
+        float[,] result = new float[rows, cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i, j] = matrix[i, j] / scalar;
+            }
+        }
+        return new _Matrix(result);
+    }
+
+    public static _Matrix operator /( _Matrix matrix, float scalar){
+        return DivideByScalar(matrix, scalar);
+    }
+
+    public static _Matrix operator /( _Matrix matrix, int scalar){
+        return DivideByScalar(matrix, scalar);
+    }
+
 //---------------------------------------------------------------------
 
 
@@ -367,7 +443,8 @@ public class _Matrix
             }
 
             if (Mathf.Abs(augmented[i, i]) < 1e-10){
-                return null;
+                //throw new ArgumentException($"{Mathf.Abs(augmented[i, i])} < 1e-10");
+                augmented[i, i] = 1e-10f; //TODO
             }
 
             float pivot = augmented[i, i];
@@ -425,6 +502,55 @@ public class _Matrix
         return new _Matrix(result);
 
     }
+
+
+
+//---------------------------------------------------------------------
+    public _Matrix CholeskyDecomposition(){
+
+        int rows = GetLength(0);
+        int cols = GetLength(1);
+        
+        if (rows != cols) {
+            throw new ArgumentException("The matrix should have rows == cols"); 
+        }
+
+        _Matrix result = Homogen(rows, cols, 0f);
+
+        for (int j = 0; j < cols; j++){
+            for (int i = j; i < rows; i++){
+                float tempFloat = this[i, j];
+
+                if (i == j){
+                    for (int k = 0; k < j; k++){
+                        tempFloat -= result[i, k] * result[i, k];
+                    }
+                    if (tempFloat < 1e-7){
+                        tempFloat = 1e-7f; //TODO
+                        //throw new ArgumentException("tempFloat < 1e-7"); 
+                    }
+                    if (Mathf.Abs(tempFloat) < 1e-7){
+                        tempFloat = 0f;
+                    }
+                    result[i, i] = Mathf.Sqrt(tempFloat);
+                }
+                else {
+                    for (int k = 0; k < j; k++){
+                        tempFloat -= result[i, k] * result[j, k];
+                    }
+                    if (Math.Abs(result[j, j]) < 1e-7){
+                        result[j, j] = 1e-7f;
+                        //throw new ArgumentException("CholeskyDecomposition: Math.Abs(result[j, j]) < 1e-7");  TODO
+                    }
+                    result[i, j] = tempFloat / result[j, j];
+                }
+            }
+        }
+        return result;
+    }
+
+    
+
 //------------------CONVERSIONS------------------------------------------
     
     public _Quaternion toQuaternion(){

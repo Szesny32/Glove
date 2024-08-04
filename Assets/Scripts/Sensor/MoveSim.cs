@@ -23,7 +23,7 @@ public class MoveSim : MonoBehaviour
         if(clock > timer){
             active = new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f)).normalized;
             clock %= timer;
-            rotationSpeedDegreesPerSecond = Random.Range(-1.0f, 1.0f) *  360f;
+            rotationSpeedDegreesPerSecond = Random.Range(-1.0f, 1.0f) *  90f;
         }  
 
         float f = (Time.time % timer) > timer/2f ? -1 : 1;

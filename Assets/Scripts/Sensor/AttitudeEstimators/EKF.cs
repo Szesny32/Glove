@@ -73,7 +73,7 @@ public class EKF : AttitudeEstimator
 
         _Matrix F = FJacobian(angularVelocity, dt);
         Q = ProcessNoiseCovarianceMatrix(gyroscopeNoise, state, dt);
-        P_predicted = F * P * F.T + Q;
+        P_predicted = (F * P * F.T) + Q;
     }
 
     private _Quaternion f(_Quaternion q, Vector3 w, float dt){
@@ -156,10 +156,11 @@ public class EKF : AttitudeEstimator
         _H = H(state_predicted);
 
  
-        _Matrix S = _H * P_predicted * _H.T + R;
-        
+        _Matrix S = (_H * P_predicted * _H.T) + R;
+
+        //TODO
         for (int i = 0; i < S.GetLength(0); i++) {
-                S[i, i] +=  1e-6f;
+            S[i, i] +=  1e-6f;
         }
 
         K = P_predicted * _H.T * S.Inv;

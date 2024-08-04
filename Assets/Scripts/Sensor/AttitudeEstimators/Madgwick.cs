@@ -24,7 +24,7 @@ public class Madgwick : AttitudeEstimator
     _Quaternion Q = new _Quaternion(1, 0, 0, 0);
     //estimated mean zero gyroscope measurement error of each axis
 
-    //public float beta = 0.1f;  //TODO
+    //float beta;  //TODO
     _Matrix beta;
 
 
@@ -33,19 +33,35 @@ public class Madgwick : AttitudeEstimator
         float ey = Mathf.Sqrt(gyroscopeNoise.y);
         float ez = Mathf.Sqrt(gyroscopeNoise.z);
 
-        beta = Mathf.Sqrt(0.75f) * new _Matrix(new float[,]{
-            {1, 0, 0, 0},
+        //TODO
+        // beta = Mathf.Sqrt(0.75f) * new _Matrix(new float[,]{
+        //     {1, 0, 0, 0},
+        //     {0, ex, 0, 0},
+        //     {0, 0, ey, 0},
+        //     {0, 0, 0, ez}
+        // });
+
+        //LEPSZY BEZ SZUMU
+         beta = Mathf.Sqrt(0.75f) * new _Matrix(new float[,]{
+            {Mathf.Sqrt(gyroscopeNoise.x + gyroscopeNoise.y + gyroscopeNoise.z), 0, 0, 0},
             {0, ex, 0, 0},
             {0, 0, ey, 0},
             {0, 0, 0, ez}
         });
+
+       
+
+
+        //beta = Mathf.Sqrt(0.75f) * Mathf.Sqrt(gyroscopeNoise.x + gyroscopeNoise.y + gyroscopeNoise.z);
+           
     }
 
     public override void UpdateOrientation(){
         float dt = Time.deltaTime;
 
+
         _Quaternion Qw = 0.5f * Omega(angularVelocity)*Q;
-        
+
         Vector3 g = Vector3.up;
         Vector3 a = acceleration;
 
@@ -65,6 +81,7 @@ public class Madgwick : AttitudeEstimator
         _Matrix Jgb = _Matrix.StackByRows(Jg, Jb);
 
         Q += (Qw - beta*Gradient(Jgb, fgb)) * dt;
+        
         transform.rotation = Q.Unity();
     }
     

@@ -11,33 +11,39 @@ public class TextManager : MonoBehaviour
     [SerializeField]
     private TMP_Text UI;
 
+    private AttitudeEstimator[] objects;
+    private TextMeshPro[] labels;
+
     void Start()
     {
 
         var objectsWithComponent = FindObjectsOfType<AttitudeEstimator>();
         Camera mainCamera = Camera.main;
 
-        foreach (var obj in objectsWithComponent)
+        objects = new AttitudeEstimator[objectsWithComponent.Length];
+        labels = new TextMeshPro[objectsWithComponent.Length];
+
+        for ( int i = 0; i < objectsWithComponent.Length; i++)
         {
-            GameObject textObject = new GameObject(obj.gameObject.name);
-            textObject.transform.parent = this.transform;
-            TextMeshPro label = textObject.AddComponent<TextMeshPro>();
+            objects[i] = objectsWithComponent[i].GetComponent<AttitudeEstimator>();
+            GameObject obj = new GameObject(objectsWithComponent[i].gameObject.name);
+            obj.transform.parent = this.transform;
+            labels[i] = obj.AddComponent<TextMeshPro>();
 
-            label.text = obj.gameObject.name;
-            label.fontSize = 12;
+            labels[i].text = objectsWithComponent[i].gameObject.name;
+            labels[i].fontSize = 10;
 
-            RectTransform rectTransform = label.GetComponent<RectTransform>();
-            Vector3 targetPosition = obj.transform.position;
+            RectTransform rectTransform = labels[i].GetComponent<RectTransform>();
+            Vector3 targetPosition = objectsWithComponent[i].transform.position;
             rectTransform.position = new Vector3(targetPosition.x, targetPosition.y + 0.5f, targetPosition.z + 10f);
 
             float padding = 10f; // Dodatkowa przestrzeń, jeśli potrzebna
-            float width = label.preferredWidth + padding;    
+            float width = labels[i].preferredWidth + padding;    
 
             rectTransform.sizeDelta = new Vector2(width, rectTransform.sizeDelta.y);
 
-            textObject.transform.LookAt(mainCamera.transform);
-        
-            textObject.transform.Rotate(Vector3.up * 180f); 
+            obj.transform.LookAt(mainCamera.transform);
+            obj.transform.Rotate(Vector3.up * 180f); 
 
         }
     }
@@ -47,6 +53,10 @@ public class TextManager : MonoBehaviour
     void Update()
     {
         UI.text = $"Time: {Time.time:F2}s";
+        for (int i = 0; i < objects.Length; i++){
+            float t = objects[i].RotationMatchTimeIndicator();
+            labels[i].text = $"{objects[i].gameObject.name} \n{t:F2}s [{100*t/Time.time:F2}%]"; 
+        }
     }
 }
 
