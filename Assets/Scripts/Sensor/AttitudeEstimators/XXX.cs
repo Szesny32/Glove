@@ -17,8 +17,10 @@ private float alpha = 0.98f;
         q2 = Quaternion.Slerp(q2, GetWeightMean(), 0.1f);
 
         Quaternion q1 = _AngularRate();
-        
-        transform.rotation = Quaternion.Slerp(q1, q2, 1-alpha);
+
+        Quaternion q3 = Quaternion.Slerp(q1, q2, 1-alpha);
+
+        transform.rotation = q3;
 
 
 

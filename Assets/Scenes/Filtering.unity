@@ -403,6 +403,7 @@ MonoBehaviour:
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   angleDifference: 0
+  angleDifferenceTotal: 0
   removeBiasMode: 0
   type: 0
   Taylor_K_Order: 1
@@ -428,6 +429,7 @@ MonoBehaviour:
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   angleDifference: 0
+  angleDifferenceTotal: 0
   removeBiasMode: 0
 --- !u!1001 &353676431
 PrefabInstance:
@@ -690,6 +692,7 @@ MonoBehaviour:
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   angleDifference: 0
+  angleDifferenceTotal: 0
   removeBiasMode: 0
   type: 1
   Taylor_K_Order: 1
@@ -851,6 +854,7 @@ MonoBehaviour:
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   angleDifference: 0
+  angleDifferenceTotal: 0
   removeBiasMode: 0
 --- !u!1 &631984636 stripped
 GameObject:
@@ -874,6 +878,7 @@ MonoBehaviour:
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   angleDifference: 0
+  angleDifferenceTotal: 0
   removeBiasMode: 0
 --- !u!1001 &636780799
 PrefabInstance:
@@ -957,6 +962,7 @@ MonoBehaviour:
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   angleDifference: 0
+  angleDifferenceTotal: 0
   removeBiasMode: 0
   alpha: 0.98
   type: 0
@@ -982,6 +988,7 @@ MonoBehaviour:
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   angleDifference: 0
+  angleDifferenceTotal: 0
   removeBiasMode: 0
   alpha: 0.98
   type: 1
@@ -1135,6 +1142,7 @@ MonoBehaviour:
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   angleDifference: 0
+  angleDifferenceTotal: 0
   removeBiasMode: 0
 --- !u!1 &938265368
 GameObject:
@@ -1404,11 +1412,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 71.5
+      value: 59.92
       objectReference: {fileID: 0}
     - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -22.5
+      value: -19.43
       objectReference: {fileID: 0}
     - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1472,6 +1480,7 @@ MonoBehaviour:
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   angleDifference: 0
+  angleDifferenceTotal: 0
   removeBiasMode: 0
 --- !u!1001 &1587318993
 PrefabInstance:
@@ -1830,6 +1839,7 @@ MonoBehaviour:
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   angleDifference: 0
+  angleDifferenceTotal: 0
   removeBiasMode: 0
 --- !u!1 &1971547372
 GameObject:
@@ -2018,6 +2028,7 @@ MonoBehaviour:
   acceleromter: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   angleDifference: 0
+  angleDifferenceTotal: 0
   removeBiasMode: 0
 --- !u!1 &2083590876
 GameObject:

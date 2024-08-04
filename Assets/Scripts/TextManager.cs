@@ -55,7 +55,8 @@ public class TextManager : MonoBehaviour
         UI.text = $"Time: {Time.time:F2}s";
         for (int i = 0; i < objects.Length; i++){
             float t = objects[i].RotationMatchTimeIndicator();
-            labels[i].text = $"{objects[i].gameObject.name} \n{t:F2}s [{100*t/Time.time:F2}%]"; 
+            float diff = objects[i].angleDifferenceTotal/Time.frameCount;
+            labels[i].text = $"{objects[i].gameObject.name} \n{t:F2}s [{100*t/Time.time:F2}%]\n{diff:F2}"; 
         }
     }
 }

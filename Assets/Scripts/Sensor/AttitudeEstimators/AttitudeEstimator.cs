@@ -25,7 +25,8 @@ public class AttitudeEstimator : MonoBehaviour
     private Material incorrectMaterial;
 
     public float angleDifference;
-    private float angleThreshold = 2f;
+    public float angleDifferenceTotal = 0f;
+    private float angleThreshold = 3f;
     protected bool rotationMatch = false;
     protected float rotationMatchTime = 0f;
 
@@ -82,6 +83,7 @@ public class AttitudeEstimator : MonoBehaviour
 
     void Verify(){
         angleDifference = Quaternion.Angle(reference.rotation, transform.rotation);
+        angleDifferenceTotal +=angleDifference;
         if (angleDifference <= angleThreshold && !rotationMatch) {
             rotationMatch = true;
             renderer.material = correctMaterial;
