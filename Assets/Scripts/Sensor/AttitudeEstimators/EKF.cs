@@ -38,6 +38,10 @@ public class EKF : AttitudeEstimator
 
 
     public override void Init(){
+
+            acceleromterNoise /= 9.8067f;
+            magnetometerNoise  /= 50.06349f; 
+            
         state = new _Quaternion(transform.rotation);
         P = ProcessNoiseCovarianceMatrix(gyroscopeNoise, state, Time.deltaTime);
 
@@ -57,7 +61,7 @@ public class EKF : AttitudeEstimator
         PredictionStep();
         CorrectionStep();
 
-        //Debug.Log(K.Print());
+        Debug.Log(K.Print());
         _Quaternion correction = (K * v).toQuaternion();
 
         state = (state_predicted + correction).normalized;
