@@ -46,12 +46,11 @@ public class UKF : AttitudeEstimator
     public override void Init(){
         X = new _Quaternion(transform.rotation);
 
-        P = new _Matrix(new float[,]{
-            {0, 0, 0, 0},
-            {0, 0, 0, 0},
-            {0, 0, 0, 0},
-            {0, 0, 0, 0}
-        });
+
+            acceleromterNoise /= 9.8067f;
+            magnetometerNoise  /= 50.06349f; 
+
+        P = ProcessNoiseCovarianceMatrix(gyroscopeNoise, X, Time.deltaTime);
 
         Rn = new _Matrix( new float[,]{
             {acceleromterNoise.x, 0, 0, 0, 0, 0},
@@ -355,13 +354,16 @@ public class UKF : AttitudeEstimator
         float[,] result = new float[,]{
             {g.x*(0.5f - qy2 - qz2) + g.y*(qwqz + qxqy) + g.z*(qxqz - qwqy)},
             {g.x*(qxqy - qwqz) + g.y*(0.5f - qx2 - qz2) + g.z*(qwqx + qyqz)},
-            {g.x*(qwqy + qxqz) + g.y*(qyqz - qwqx) + q.z*(0.5f - qx2 - qy2)},
+            {g.x*(qwqy + qxqz) + g.y*(qyqz - qwqx) + g.z*(0.5f - qx2 - qy2)},
             {r.x*(0.5f - qy2 - qz2) + r.y*(qwqz + qxqy) + r.z*(qxqz - qwqy)},
             {r.x*(qxqy - qwqz) + r.y*(0.5f - qx2 - qz2) + r.z*(qwqx + qyqz)},
             {r.x*(qwqy + qxqz) + r.y*(qyqz - qwqx) + r.z*(0.5f - qx2 - qy2)}
         };
         return 2 * new _Matrix(result);
     }
+
+
+
 
     // _Matrix UpdateNonlinearY(_Matrix Y, _Matrix X, _Matrix U, float dt){
     //     /* Insert the nonlinear measurement transformation here
