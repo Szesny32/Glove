@@ -4,7 +4,6 @@ using UnityEngine;
 using System;
 
 
-
 public class _Quaternion 
 {
     public float[,] matrix;
@@ -60,16 +59,16 @@ public class _Quaternion
         return (i < 2)? matrix.GetLength(i) : 0;
     }
 
-    public void Normalize() {
-        float norm = (float)Math.Sqrt(w * w + x * x + y * y + z * z);
-        if (norm == 0) {
-            //throw new InvalidOperationException("Cannot normalize a quaternion with zero length.");
-            w= x= y= z=0;
-        }
-        w /= norm;
-        x /= norm;
-        y /= norm;
-        z /= norm;
+    public _Quaternion normalized{
+        get { return Normalize(this); }
+    }
+
+    public static _Quaternion Normalize(_Quaternion q) {
+        float norm = (float)Math.Sqrt(q.w * q.w + q.x * q.x + q.y * q.y + q.z * q.z);
+        if (norm == 0) 
+            return new _Quaternion(0,0,0,0);
+         else 
+            return  q / norm;
     }
 
     public Quaternion Unity(){
@@ -151,6 +150,8 @@ public class _Quaternion
     public static _Quaternion operator /( _Quaternion q, int scalar){
         return DivideByScalar(q, scalar);
     }
+
+
 //---------------------------------------------------------------------
 
 
@@ -396,6 +397,27 @@ public class _Matrix
 
     public static _Matrix operator /( _Matrix matrix, int scalar){
         return DivideByScalar(matrix, scalar);
+    }
+
+    public static _Matrix operator /( _Matrix m1,  _Matrix m2){
+        int rowsA = m1.GetLength(0);
+        int colsA = m1.GetLength(1);
+        int rowsB = m2.GetLength(0);
+        int colsB = m2.GetLength(1);
+
+        if (rowsA != rowsB && colsA != colsB) {
+            throw new ArgumentException("m1 & m2 should have same shape");
+        }
+
+        float[,] result = new float[rowsA, colsA];
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsA; j++) {
+                result[i, j] = (m2[i, j]==0f)? 0f :  m1[i, j] / m2[i, j];
+            }
+        }
+        
+
+        return new _Matrix(result);
     }
 
 //---------------------------------------------------------------------

@@ -21,7 +21,7 @@ public class Madgwick : AttitudeEstimator
 
     //Gradient Descent Algorithm?
 
-    _Quaternion Q = new _Quaternion(1, 0, 0, 0);
+    _Quaternion Q;
     //estimated mean zero gyroscope measurement error of each axis
 
     //float beta;  //TODO
@@ -29,6 +29,10 @@ public class Madgwick : AttitudeEstimator
 
 
     public override void Init(){
+
+        //Q = new _Quaternion(transform.rotation);
+        Q = new _Quaternion(1, 0, 0, 0);
+
         float ex = Mathf.Sqrt(gyroscopeNoise.x);
         float ey = Mathf.Sqrt(gyroscopeNoise.y);
         float ez = Mathf.Sqrt(gyroscopeNoise.z);
@@ -86,27 +90,26 @@ public class Madgwick : AttitudeEstimator
     }
     
     private _Quaternion Gradient(_Matrix Jgb, _Matrix fgb){
-        _Quaternion gradient = (Jgb.T * fgb).toQuaternion();
-        gradient.Normalize();
+        _Quaternion gradient = (Jgb.T * fgb).toQuaternion().normalized;
         return gradient;
     }
 
     private _Matrix f(_Quaternion q, Vector3 d, Vector3 s){
         float [,] result = new float[,]{ 
-            {2*d.x*(0.5f - q.y*q.y - q.z*q.z) + 2*d.y*(q.w*q.z + q.x*q.y) + 2*d.z*(q.x*q.z - q.w*q.y) - s.x},
-            {2*d.x*(q.x*q.y - q.w*q.z) + 2*d.y*(0.5f - q.x*q.x - q.z*q.z) + 2*d.z*(q.w*q.x + q.y*q.z) - s.y},
-            {2*d.x*(q.w*q.y + q.x*q.z) + 2*d.y*(q.y*q.z - q.w*q.x) + 2*d.z*(0.5f - q.x*q.x - q.y*q.y) - s.z}
+            {d.x*(0.5f - q.y*q.y - q.z*q.z) + d.y*(q.w*q.z + q.x*q.y) + d.z*(q.x*q.z - q.w*q.y)},
+            {d.x*(q.x*q.y - q.w*q.z) + d.y*(0.5f - q.x*q.x - q.z*q.z) + d.z*(q.w*q.x + q.y*q.z)},
+            {d.x*(q.w*q.y + q.x*q.z) + d.y*(q.y*q.z - q.w*q.x) + d.z*(0.5f - q.x*q.x - q.y*q.y)}
         };
-        return new _Matrix(result);
+        return 2f * new _Matrix(result) - new _Matrix(new float[,]{{s.x},{s.y},{s.z}});
     }   
 
     private _Matrix Jacobian(_Quaternion q, Vector3 d){
          float [,] result = new float[,]{ 
-            {2*d.y*q.z - 2*d.z*q.y,     2*d.y*q.y + 2*d.z*q.z,     - 4*d.x*q.y + 2*d.y*q.x - 2*d.z*q.w,       - 4*d.x*q.z + 2*d.y*q.w + 2*d.z*q.x},
-            { - 2*d.x*q.z + 2*d.z*q.x,  2*d.x*q.y - 4*d.y*q.x + 2*d.z*q.w,      2*d.x*q.x + 2*d.z*q.z,         - 2*d.x*q.w - 4*d.y*q.z + 2*d.z*q.y },
-            {2*d.x*q.y - 2*d.y*q.x,     2*d.x*q.z - 2*d.y*q.w - 4*d.z*q.x,      2*d.x*q.w + 2*d.y*q.z - 4*d.z*q.y,      2*d.x*q.x + 2*d.y*q.y}
-        };
-        return new _Matrix(result);
+            {d.x*q.w  +d.y*q.z   -d.z*q.y,       d.x*q.x  +d.y*q.y  +d.z*q.z,        -d.x*q.y  +d.y*q.x  -d.z*q.w,        -d.x*q.z  +d.y*q.w  +d.z*q.x},
+            {-d.x*q.z   +d.y*q.w   +d.z*q.x,       d.x*q.y  -d.y*q.x  +d.z*q.w,        d.x*q.x  +d.y*q.y  +d.z*q.z,        -d.x*q.w  -d.y*q.z  +d.z*q.y},
+            {d.x*q.y   -d.y*q.x   +d.z*q.w,       d.x*q.z  -d.y*q.w  -d.z*q.x,        d.x*q.w  +d.y*q.z  -d.z*q.y,        d.x*q.x  +d.y*q.y  +d.z*q.z}
+       };
+        return 2f * new _Matrix(result);
     }
 
     private _Matrix Omega(Vector3 w){

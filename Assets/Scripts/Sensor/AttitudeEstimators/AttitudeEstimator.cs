@@ -9,16 +9,16 @@ public class AttitudeEstimator : MonoBehaviour
     public GyroSim gyroscope;
     protected Vector3 angularVelocity;
     protected Vector3 gyroscopeBias;
-    protected Vector3 gyroscopeNoise;
+    public Vector3 gyroscopeNoise;
 
     public AccSim acceleromter;
     protected Vector3 acceleration;
     protected Vector3 acceleromterBias;
-    protected Vector3 acceleromterNoise;
+    public Vector3 acceleromterNoise;
 
     public MagSim magnetometer;
     protected Vector3 magneticField;
-    protected Vector3 magnetometerNoise;
+    public Vector3 magnetometerNoise;
     
     protected Renderer renderer;
     private Material correctMaterial;
@@ -26,7 +26,7 @@ public class AttitudeEstimator : MonoBehaviour
 
     public float angleDifference;
     public float angleDifferenceTotal = 0f;
-    private float angleThreshold = 3f;
+    private float angleThreshold = 10f;
     protected bool rotationMatch = false;
     protected float rotationMatchTime = 0f;
 

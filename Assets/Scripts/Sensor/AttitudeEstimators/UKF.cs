@@ -6,7 +6,7 @@ public class UKF : AttitudeEstimator
 {
     //https://github.com/pronenewbits/Arduino_AHRS_System/blob/master/ahrs_ukf/ukf.cpp
 
-    private _Quaternion X = new _Quaternion(1, 0, 0, 0); //4x1
+    private _Quaternion X; //4x1
     private _Matrix P;
 
     float alpha = 0.01f, beta = 2f, kappa = 0f, gamma, lambda; //scalar constants
@@ -44,11 +44,13 @@ public class UKF : AttitudeEstimator
     );
 
     public override void Init(){
+        X = new _Quaternion(transform.rotation);
+
         P = new _Matrix(new float[,]{
-            {10, 0, 0, 0},
-            {0, 10, 0, 0},
-            {0, 0, 10, 0},
-            {0, 0, 0, 10}
+            {0, 0, 0, 0},
+            {0, 0, 0, 0},
+            {0, 0, 0, 0},
+            {0, 0, 0, 0}
         });
 
         Rn = new _Matrix( new float[,]{
@@ -65,7 +67,7 @@ public class UKF : AttitudeEstimator
 
 
         //UKF-1
-        lambda = (alpha*alpha) * (N+kappa) - N;        
+        lambda = alpha*alpha * (N+kappa) - N;        
         gamma = Mathf.Sqrt(N + lambda);           
 
         //UKF-2 Wm: 1xN
@@ -81,7 +83,7 @@ public class UKF : AttitudeEstimator
         //UKF-3
         //Wc = [Wm(0)+(1-alpha(^2)+beta)  1/(2(N+lambda)) ... 1/(2(N+lambda))]
         Wc = new _Matrix(Wm);
-        Wc[0,0]+= (1.0f - (alpha*alpha) + beta);
+        Wc[0,0]+= 1.0f - (alpha*alpha) + beta;
 
     }
 
@@ -126,7 +128,8 @@ public class UKF : AttitudeEstimator
         }
         _Matrix Pxy = DX * DY.T;
         _Matrix Gain = Pxy * PY.Inv;
-        _Matrix Err = Ym - Y;
+        _Matrix Err = Ym - Y;;
+        X += (Gain*Err).toQuaternion();
         P = P - (Gain * PY * Gain.T);
         transform.rotation = X.Unity();
         //Debug.Log(log);
@@ -218,7 +221,7 @@ public class UKF : AttitudeEstimator
         }
 
         P = (AuxSigma1 * DX.T) + _CovNoise;
-        X = new _Quaternion(newState.matrix);
+        X = new _Quaternion(newState.matrix).normalized;
         XSigma = newXSigma;
     }
 

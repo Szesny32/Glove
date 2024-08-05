@@ -9,11 +9,8 @@ public class MoveSim : MonoBehaviour
     private float clock;
 
 
-    public Vector3 active;
-
-    void Start(){
-        active = new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f)).normalized;
-    }
+    public Vector3 active = Vector3.up;
+    float angleToRotate = 0f;
 
 
     
@@ -24,10 +21,11 @@ public class MoveSim : MonoBehaviour
             active = new Vector3(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f)).normalized;
             clock %= timer;
             rotationSpeedDegreesPerSecond = Random.Range(-1.0f, 1.0f) *  90f;
+            angleToRotate = rotationSpeedDegreesPerSecond * Time.deltaTime + Mathf.Sin(Time.time)/2;
         }  
 
-        float f = (Time.time % timer) > timer/2f ? -1 : 1;
-        float angleToRotate = f * rotationSpeedDegreesPerSecond * Time.deltaTime + Mathf.Sin(Time.time)/2;
+        
+        
 
 
         transform.Rotate(active, angleToRotate, Space.Self);

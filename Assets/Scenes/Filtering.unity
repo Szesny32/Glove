@@ -400,8 +400,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reference: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
+  gyroscopeNoise: {x: 0, y: 0, z: 0}
   acceleromter: {fileID: 1935980346}
+  acceleromterNoise: {x: 0, y: 0, z: 0}
   magnetometer: {fileID: 1935980347}
+  magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
@@ -426,8 +429,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reference: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
+  gyroscopeNoise: {x: 0, y: 0, z: 0}
   acceleromter: {fileID: 1935980346}
+  acceleromterNoise: {x: 0, y: 0, z: 0}
   magnetometer: {fileID: 1935980347}
+  magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
@@ -689,8 +695,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reference: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
+  gyroscopeNoise: {x: 0, y: 0, z: 0}
   acceleromter: {fileID: 1935980346}
+  acceleromterNoise: {x: 0, y: 0, z: 0}
   magnetometer: {fileID: 1935980347}
+  magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
@@ -851,8 +860,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reference: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
+  gyroscopeNoise: {x: 0, y: 0, z: 0}
   acceleromter: {fileID: 1935980346}
+  acceleromterNoise: {x: 0, y: 0, z: 0}
   magnetometer: {fileID: 1935980347}
+  magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
@@ -875,8 +887,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reference: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
+  gyroscopeNoise: {x: 0, y: 0, z: 0}
   acceleromter: {fileID: 1935980346}
+  acceleromterNoise: {x: 0, y: 0, z: 0}
   magnetometer: {fileID: 1935980347}
+  magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
@@ -959,8 +974,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reference: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
+  gyroscopeNoise: {x: 0, y: 0, z: 0}
   acceleromter: {fileID: 1935980346}
+  acceleromterNoise: {x: 0, y: 0, z: 0}
   magnetometer: {fileID: 1935980347}
+  magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
@@ -985,8 +1003,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reference: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
+  gyroscopeNoise: {x: 0, y: 0, z: 0}
   acceleromter: {fileID: 1935980346}
+  acceleromterNoise: {x: 0, y: 0, z: 0}
   magnetometer: {fileID: 1935980347}
+  magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
@@ -1139,8 +1160,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reference: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
+  gyroscopeNoise: {x: 0, y: 0, z: 0}
   acceleromter: {fileID: 1935980346}
+  acceleromterNoise: {x: 0, y: 0, z: 0}
   magnetometer: {fileID: 1935980347}
+  magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
@@ -1398,66 +1422,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1272509713}
   m_SourcePrefab: {fileID: 100100000, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
---- !u!1001 &1170426282
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-      propertyPath: m_Name
-      value: XXX
-      objectReference: {fileID: 0}
-    - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 59.92
-      objectReference: {fileID: 0}
-    - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -19.43
-      objectReference: {fileID: 0}
-    - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1959601127}
-  m_SourcePrefab: {fileID: 100100000, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
 --- !u!1 &1272509712 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
@@ -1477,8 +1441,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reference: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
+  gyroscopeNoise: {x: 0, y: 0, z: 0}
   acceleromter: {fileID: 1935980346}
+  acceleromterNoise: {x: 0, y: 0, z: 0}
   magnetometer: {fileID: 1935980347}
+  magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
@@ -1817,30 +1784,6 @@ MonoBehaviour:
   accelerometer: {fileID: 1935980346}
   magnetometer: {fileID: 1935980347}
   logToFile: 0
---- !u!1 &1959601121 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-  m_PrefabInstance: {fileID: 1170426282}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1959601127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1959601121}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 441481537cad7bd499e6ea82ac1b5ee9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  reference: {fileID: 1935980352}
-  gyroscope: {fileID: 1935980340}
-  acceleromter: {fileID: 1935980346}
-  magnetometer: {fileID: 1935980347}
-  angleDifference: 0
-  angleDifferenceTotal: 0
-  removeBiasMode: 0
 --- !u!1 &1971547372
 GameObject:
   m_ObjectHideFlags: 0
@@ -2025,8 +1968,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reference: {fileID: 1935980352}
   gyroscope: {fileID: 1935980340}
+  gyroscopeNoise: {x: 0, y: 0, z: 0}
   acceleromter: {fileID: 1935980346}
+  acceleromterNoise: {x: 0, y: 0, z: 0}
   magnetometer: {fileID: 1935980347}
+  magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
@@ -2181,7 +2127,6 @@ SceneRoots:
   - {fileID: 956213849}
   - {fileID: 1984444009}
   - {fileID: 1587318993}
-  - {fileID: 1170426282}
   - {fileID: 1971547376}
   - {fileID: 847485631}
   - {fileID: 407006265}
