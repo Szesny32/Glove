@@ -33,14 +33,10 @@ public class EKF : AttitudeEstimator
     //The measurement noise covariance matrix
     _Matrix R;
 
-
-    string log;   
-
-
     public override void Init(){
 
-            acceleromterNoise /= 9.8067f;
-            magnetometerNoise  /= 50.06349f; 
+        acceleromterNoise /= 9.8067f;
+        magnetometerNoise  /= 50.06349f; 
             
         state = new _Quaternion(transform.rotation);
         P = ProcessNoiseCovarianceMatrix(gyroscopeNoise, state, Time.deltaTime);
@@ -61,7 +57,6 @@ public class EKF : AttitudeEstimator
         PredictionStep();
         CorrectionStep();
 
-        Debug.Log(K.Print());
         _Quaternion correction = (K * v).toQuaternion();
 
         state = (state_predicted + correction).normalized;
@@ -75,8 +70,6 @@ public class EKF : AttitudeEstimator
     }
 
     private void PredictionStep(){
-        log+=$"PREDICTION STEP\n\n";
-
         float dt = Time.deltaTime;
         state_predicted = f(state, angularVelocity, dt).normalized;
 
@@ -87,9 +80,7 @@ public class EKF : AttitudeEstimator
         P_predicted = (F * P * F.T) + Q;
     }
 
-
     private void CorrectionStep(){
-
         Vector3 a = acceleration.normalized;
         Vector3 m = magneticField.normalized;
         _Matrix z = new _Matrix(new float[,]{
@@ -102,8 +93,8 @@ public class EKF : AttitudeEstimator
         });
 
         _Matrix hg = h(state_predicted, g);
-        _Matrix hm = h(state_predicted, r);
-        _Matrix _h = _Matrix.StackByRows(hg, hm); //state as acc-mag
+        _Matrix hr = h(state_predicted, r);
+        _Matrix _h = _Matrix.StackByRows(hg, hr); //state as acc-mag
 
         v = z - _h; //Innovation or Measurement residual.
 
@@ -121,12 +112,7 @@ public class EKF : AttitudeEstimator
         K = P_predicted * _H.T * S.Inv;
     }
 
-
-
-
     //-----------PREDICTION STEP------------------------------------------------------------------------------
-
-
     private _Quaternion f(_Quaternion q, Vector3 w, float dt){
         return(_Matrix.Identity(4) + (dt/2)* Omega(w)) * q;
     }
@@ -178,16 +164,12 @@ public class EKF : AttitudeEstimator
             { 0, 0, noise.z, }
         });
     }
-
     //--------------------------------------------------------------------------------------------------------
 
  
 
     //-----------CORRECTION STEP------------------------------------------------------------------------------
-
-
-
-       private _Matrix h(_Quaternion q, Vector3 d){
+    private _Matrix h(_Quaternion q, Vector3 d){
         float [,] result = new float[,]{ 
             {d.x*(0.5f - q.y*q.y - q.z*q.z) + d.y*(q.w*q.z + q.x*q.y) + d.z*(q.x*q.z - q.w*q.y)},
             {d.x*(q.x*q.y - q.w*q.z) + d.y*(0.5f - q.x*q.x - q.z*q.z) + d.z*(q.w*q.x + q.y*q.z)},
@@ -204,6 +186,5 @@ public class EKF : AttitudeEstimator
        };
         return 2f * new _Matrix(result);
     }
-
 
 }

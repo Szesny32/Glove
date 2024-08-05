@@ -10,22 +10,15 @@ public class UKF : AttitudeEstimator
     private _Matrix P;
 
     float alpha = 0.01f, beta = 2f, kappa = 0f, gamma, lambda; //scalar constants
-    
     int N  = 4;
-
     _Matrix Wm;     //First order weight
     _Matrix Wc;     //second order weight
-
     _Matrix XSigma; //(N)x(2N+1) => 4x9
     _Matrix DX;
-
-
     _Matrix Y;
     _Matrix YSigma;
     _Matrix DY;
     _Matrix PY;
-
-
     _Matrix U;
     _Matrix Rv;
     _Matrix Rn;
@@ -46,9 +39,8 @@ public class UKF : AttitudeEstimator
     public override void Init(){
         X = new _Quaternion(transform.rotation);
 
-
-            acceleromterNoise /= 9.8067f;
-            magnetometerNoise  /= 50.06349f; 
+        acceleromterNoise /= 9.8067f;
+        magnetometerNoise  /= 50.06349f; 
 
         P = ProcessNoiseCovarianceMatrix(gyroscopeNoise, X, Time.deltaTime);
 
@@ -60,10 +52,6 @@ public class UKF : AttitudeEstimator
             {0, 0, 0, 0, magnetometerNoise.y, 0},
             {0, 0, 0, 0, 0, magnetometerNoise.z}
         });
-
-
-
-
 
         //UKF-1
         lambda = alpha*alpha * (N+kappa) - N;        
@@ -86,16 +74,7 @@ public class UKF : AttitudeEstimator
 
     }
 
-
     public override void UpdateOrientation(){
-        log = "";
-
-        // Rv = new _Matrix(new float[,]{
-        //     {1e-6f, 0, 0, 0},
-        //     {0, 1e-6f, 0, 0},
-        //     {0, 0, 1e-6f, 0},
-        //     {0, 0, 0, 1e-6f}
-        // });
 
         float dt = Time.deltaTime;
         Rv = ProcessNoiseCovarianceMatrix(gyroscopeNoise, X, dt);
@@ -115,7 +94,6 @@ public class UKF : AttitudeEstimator
             {magneticField.z}
         });
 
-
         SigmaPoints();
         UnscentedTransformX(U, Rv);
 
@@ -131,9 +109,7 @@ public class UKF : AttitudeEstimator
         X += (Gain*Err).toQuaternion();
         P = P - (Gain * PY * Gain.T);
         transform.rotation = X.Unity();
-        //Debug.Log(log);
     }
-
 
     private void SigmaPoints(){
         /* UKF-4
@@ -141,7 +117,6 @@ public class UKF : AttitudeEstimator
             gSqrtP = gamma * sqrt(P(k-1))
             XSigma(k-1) = [x(k-1) Xs(k-1)+gSqrtP Xs(k-1)-gSqrtP]                 
         */
-
 
         //  Xs(k-1) = [x(k-1) ... x(k-1)]            ; Xs(k-1) = NxN
         _Matrix Xs = new _Matrix(new float[,]{
@@ -151,12 +126,9 @@ public class UKF : AttitudeEstimator
             {X.z, X.z, X.z, X.z}
         });
 
-
         //gSqrtP = gamma * sqrt(P(k-1))
         _Matrix gSqrtP = gamma * P.CholeskyDecomposition();
-     
-     
-
+    
         //XSigma(k-1) = [x(k-1) Xs(k-1)+gSqrtP Xs(k-1)-gSqrtP]       
         _Matrix Xsp =  Xs + gSqrtP;
         _Matrix Xsn =  Xs - gSqrtP;
@@ -168,9 +140,6 @@ public class UKF : AttitudeEstimator
             {X.z, Xsp[3,0], Xsp[3,1], Xsp[3,2], Xsp[3,3], Xsn[3,0], Xsn[3,1], Xsn[3,2], Xsn[3,3]}
         });  
 
-
-
-    
     }
 
     private void UnscentedTransformX(_Matrix InpVector, _Matrix _CovNoise){
@@ -189,7 +158,6 @@ public class UKF : AttitudeEstimator
                 AuxSigma1[i, 0] = XSigma[i,j];
             }
 
-
            // AuxSigma2 = UpdateNonlinearX(AuxSigma2, AuxSigma1, InpVector, Time.deltaTime);
             AuxSigma2 = f(AuxSigma1, angularVelocity, Time.deltaTime); 
             for (int k = 0; k < AuxSigma2.rows; k++){
@@ -199,16 +167,13 @@ public class UKF : AttitudeEstimator
             newState += AuxSigma2;
         }
 
-
         /* DX = XSigma(k)(i) - Xs(k)   ; Xs(k) = [x(k|k-1) ... x(k|k-1)]
         *                             ; Xs(k) = Nx(2N+1)                      ...{UKF_7a}  */
-
         AuxSigma1 = _Matrix.Homogen(newXSigma.rows, newXSigma.cols);
         for (int j = 0; j < newXSigma.cols; j++) {
             for (int k = 0; k < AuxSigma2.rows; k++){
                 AuxSigma1[k, j] = newState[k, 0];
             }
-
         }
 
         DX  = newXSigma - AuxSigma1;
@@ -223,8 +188,6 @@ public class UKF : AttitudeEstimator
         X = new _Quaternion(newState.matrix).normalized;
         XSigma = newXSigma;
     }
-
-
 
 
     private _Matrix f(_Matrix q, Vector3 w, float dt){
@@ -242,58 +205,15 @@ public class UKF : AttitudeEstimator
         );
     }
 
-    // _Matrix UpdateNonlinearX(_Matrix X_Next, _Matrix X, _Matrix U, float dt)
-    // {
-    //     /* Insert the nonlinear update transformation here
-    //     *          x(k+1) = f[x(k), u(k)]
-    //     *
-    //     * The quaternion update function:
-    //     *  q0_dot = 1/2. * (  0   - p*q1 - q*q2 - r*q3)
-    //     *  q1_dot = 1/2. * ( p*q0 +   0  + r*q2 - q*q3)
-    //     *  q2_dot = 1/2. * ( q*q0 - r*q1 +  0   + p*q3)
-    //     *  q3_dot = 1/2. * ( r*q0 + q*q1 - p*q2 +  0  )
-    //     * 
-    //     * Euler method for integration:
-    //     *  q0 = q0 + q0_dot * dT;
-    //     *  q1 = q1 + q1_dot * dT;
-    //     *  q2 = q2 + q2_dot * dT;
-    //     *  q3 = q3 + q3_dot * dT;
-    //     */
-    //     float q0, q1, q2, q3;
-    //     float p, q, r;
-        
-    //     q0 = X[0, 0];
-    //     q1 = X[1, 0];
-    //     q2 = X[2, 0];
-    //     q3 = X[3, 0];
-        
-    //     p = U[0, 0];
-    //     q = U[1, 0];
-    //     r = U[2, 0];
-        
-    //     X_Next[0, 0] = (0.5f * (+0f -p*q1 -q*q2 -r*q3))*dt + q0;
-    //     X_Next[1, 0] = (0.5f * (+p*q0 +0f +r*q2 -q*q3))*dt + q1;
-    //     X_Next[2, 0] = (0.5f * (+q*q0 -r*q1 +0f +p*q3))*dt + q2;
-    //     X_Next[3, 0] = (0.5f * (+r*q0 +q*q1 -p*q2 +0f))*dt + q3;
-    //     //float norm = Mathf.Sqrt(X_Next[0, 0]*X_Next[0, 0] + X_Next[1, 0]*X_Next[1, 0] + X_Next[2, 0]*X_Next[2, 0] + X_Next[3, 0]*X_Next[3, 0]);
-    //     //log += $"norm: \n{norm}\n\n"; 
-    //     return X_Next;
-        
-    // }
-
-
     private void UnscentedTransformY(_Matrix InpVector, _Matrix _CovNoise){
 
         /* XSigma(k) = f(XSigma(k-1), u(k-1))                                  ...{UKF_5a}  */
         /* x(k|k-1) = sum(Wm(i) * XSigma(k)(i))    ; i = 1 ... (2N+1)          ...{UKF_6a}  */
         _Matrix AuxSigma1 = _Matrix.Homogen(XSigma.rows, 1);
         _Matrix AuxSigma2 = _Matrix.Homogen(6, 1);
-
-
         _Matrix newSigmaY = _Matrix.Homogen(6, 9);
-
-
         _Matrix newStateY =_Matrix.Homogen(6, 1, 0f);
+
         for (int j = 0; j < XSigma.cols; j++) {
             AuxSigma1 = _Matrix.Homogen(XSigma.rows, 1);
             AuxSigma2 = _Matrix.Homogen(6, 1);
@@ -301,8 +221,9 @@ public class UKF : AttitudeEstimator
                 AuxSigma1[i, 0] = XSigma[i,j];
             }
 
-            //AuxSigma2 = UpdateNonlinearY(AuxSigma2, AuxSigma1, InpVector, Time.deltaTime);
-            AuxSigma2 = h(new _Quaternion(AuxSigma1.matrix));
+            _Matrix hg = h(new _Quaternion(AuxSigma1.matrix), g);
+            _Matrix hr = h(new _Quaternion(AuxSigma1.matrix), r);
+            AuxSigma2 = _Matrix.StackByRows(hg, hr);
 
             for (int k = 0; k < AuxSigma2.rows; k++){
                 newSigmaY[k, j] = AuxSigma2[k, 0];
@@ -311,16 +232,11 @@ public class UKF : AttitudeEstimator
             newStateY += AuxSigma2;
         }
 
-
-        /* DX = XSigma(k)(i) - Xs(k)   ; Xs(k) = [x(k|k-1) ... x(k|k-1)]
-        *                             ; Xs(k) = Nx(2N+1)                      ...{UKF_7a}  */
-
         AuxSigma1 = _Matrix.Homogen(newSigmaY.rows, newSigmaY.cols);
         for (int j = 0; j < newSigmaY.cols; j++) {
             for (int k = 0; k < AuxSigma2.rows; k++){
                 AuxSigma1[k, j] = newStateY[k, 0];
             }
-
         }
         DY  = newSigmaY - AuxSigma1;
 
@@ -331,88 +247,18 @@ public class UKF : AttitudeEstimator
             }
         }
         PY = (AuxSigma1 * DY.T) + _CovNoise;
-
         Y = newStateY;
         YSigma = newSigmaY;
     }
 
-
-
-
-    private _Matrix h(_Quaternion q){
-        float qx2 = q.x * q.x;
-        float qy2 = q.y * q.y;
-        float qz2 = q.z * q.z;
-
-        float qwqx = q.w * q.x;
-        float qwqy = q.w * q.y;
-        float qwqz = q.w * q.z;
-        float qxqy = q.x * q.y;
-        float qxqz = q.x * q.z;
-        float qyqz = q.y * q.z;
-
-        float[,] result = new float[,]{
-            {g.x*(0.5f - qy2 - qz2) + g.y*(qwqz + qxqy) + g.z*(qxqz - qwqy)},
-            {g.x*(qxqy - qwqz) + g.y*(0.5f - qx2 - qz2) + g.z*(qwqx + qyqz)},
-            {g.x*(qwqy + qxqz) + g.y*(qyqz - qwqx) + g.z*(0.5f - qx2 - qy2)},
-            {r.x*(0.5f - qy2 - qz2) + r.y*(qwqz + qxqy) + r.z*(qxqz - qwqy)},
-            {r.x*(qxqy - qwqz) + r.y*(0.5f - qx2 - qz2) + r.z*(qwqx + qyqz)},
-            {r.x*(qwqy + qxqz) + r.y*(qyqz - qwqx) + r.z*(0.5f - qx2 - qy2)}
+    private _Matrix h(_Quaternion q, Vector3 d){
+        float [,] result = new float[,]{ 
+            {d.x*(0.5f - q.y*q.y - q.z*q.z) + d.y*(q.w*q.z + q.x*q.y) + d.z*(q.x*q.z - q.w*q.y)},
+            {d.x*(q.x*q.y - q.w*q.z) + d.y*(0.5f - q.x*q.x - q.z*q.z) + d.z*(q.w*q.x + q.y*q.z)},
+            {d.x*(q.w*q.y + q.x*q.z) + d.y*(q.y*q.z - q.w*q.x) + d.z*(0.5f - q.x*q.x - q.y*q.y)}
         };
-        return 2 * new _Matrix(result);
-    }
-
-
-
-
-    // _Matrix UpdateNonlinearY(_Matrix Y, _Matrix X, _Matrix U, float dt){
-    //     /* Insert the nonlinear measurement transformation here
-    //     *          y(k)   = h[x(k), u(k)]
-    //     *
-    //     * The measurement output is the gravitational and magnetic projection to the body
-    //     *     DCM     = [(+(q0**2)+(q1**2)-(q2**2)-(q3**2)),                        2*(q1*q2+q0*q3),                        2*(q1*q3-q0*q2)]
-    //     *               [                   2*(q1*q2-q0*q3),     (+(q0**2)-(q1**2)+(q2**2)-(q3**2)),                        2*(q2*q3+q0*q1)]
-    //     *               [                   2*(q1*q3+q0*q2),                        2*(q2*q3-q0*q1),     (+(q0**2)-(q1**2)-(q2**2)+(q3**2))]
-    //     * 
-    //     *  G_proj_sens = DCM * [0 0 1]             --> Gravitational projection to the accelerometer sensor
-    //     *  M_proj_sens = DCM * [Mx My Mz]          --> (Earth) magnetic projection to the magnetometer sensor
-    //     */
-    //     float q0, q1, q2, q3;
-    //     float q0_2, q1_2, q2_2, q3_2;
-
-    //     float IMU_ACC_Z0 = 1f;
-    //     float[,] IMU_MAG_B0= new float[,]{{Mathf.Cos(0)}, {Mathf.Sin(0)}, {0f}};
-
-    //     q0 = X[0, 0];
-    //     q1 = X[1, 0];
-    //     q2 = X[2, 0];
-    //     q3 = X[3, 0];
-
-    //     q0_2 = q0 * q0;
-    //     q1_2 = q1 * q1;
-    //     q2_2 = q2 * q2;
-    //     q3_2 = q3 * q3;
-        
-    //     Y[0, 0] = (2*q1*q3 -2*q0*q2) * IMU_ACC_Z0;
-
-    //     Y[1, 0] = (2*q2*q3 +2*q0*q1) * IMU_ACC_Z0;
-
-    //     Y[2, 0] = (+(q0_2) -(q1_2) -(q2_2) +(q3_2)) * IMU_ACC_Z0;
-        
-    //     Y[3, 0] = (+(q0_2)+(q1_2)-(q2_2)-(q3_2)) * IMU_MAG_B0[0, 0]
-    //             +(2*(q1*q2+q0*q3)) * IMU_MAG_B0[1, 0]
-    //             +(2*(q1*q3-q0*q2)) * IMU_MAG_B0[2, 0];
-
-    //     Y[4, 0] = (2*(q1*q2-q0*q3)) * IMU_MAG_B0[0, 0]
-    //             +(+(q0_2)-(q1_2)+(q2_2)-(q3_2)) * IMU_MAG_B0[1, 0]
-    //             +(2*(q2*q3+q0*q1)) * IMU_MAG_B0[2, 0];
-
-    //     Y[5, 0] = (2*(q1*q3+q0*q2)) * IMU_MAG_B0[0, 0]
-    //             +(2*(q2*q3-q0*q1)) * IMU_MAG_B0[1, 0]
-    //             +(+(q0_2)-(q1_2)-(q2_2)+(q3_2)) * IMU_MAG_B0[2, 0];
-
-    //     return Y;
-    // }
+        return 2f * new _Matrix(result);
+    } 
 
     private _Matrix ProcessNoiseCovarianceMatrix(Vector3 noise, _Quaternion q, float dt){
         _Matrix W = WJacobian(q, dt);
