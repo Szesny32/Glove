@@ -36,7 +36,7 @@ public class Glove : MonoBehaviour
             MagSim magnetometer = transforms[i].reference.AddComponent<MagSim>();
 
             estimators[i] = transforms[i].target.AddComponent<Complementary>();
-            estimators[i].Initialize(transforms[i].reference, gyroscope, accelerometer, magnetometer);
+            estimators[i].Initialize(transforms[i].reference, gyroscope, accelerometer, magnetometer, false);
         }
 
     }
@@ -46,7 +46,6 @@ public class Glove : MonoBehaviour
     {
         foreach(Complementary estimator in estimators){
             estimator.UpdateOrientation();
-            //pair.target.rotation = pair.reference.rotation;
         }
     }
 }

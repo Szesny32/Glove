@@ -32,6 +32,8 @@ public class AttitudeEstimator : MonoBehaviour
 
     public bool removeBiasMode = false;
 
+    public bool autoMode = true;
+
 
     
     void Start()
@@ -57,12 +59,13 @@ public class AttitudeEstimator : MonoBehaviour
         Init();
 
     }
-    public void Initialize(Transform reference, GyroSim gyroscope, AccSim acceleromter, MagSim magnetometer)
+    public void Initialize(Transform reference, GyroSim gyroscope, AccSim acceleromter, MagSim magnetometer, bool autoMode)
     {
         this.reference = reference;
         this.gyroscope = gyroscope;
         this.acceleromter = acceleromter;
         this.magnetometer = magnetometer;
+        this.autoMode = autoMode;
     }
 
     public virtual void Init(){
@@ -78,7 +81,9 @@ public class AttitudeEstimator : MonoBehaviour
 
         magneticField = magnetometer.Read().normalized;
 
-        //UpdateOrientation();
+        if(autoMode)
+            UpdateOrientation();
+
         if(renderer!=null)
             Verify();
 
