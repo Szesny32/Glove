@@ -57,7 +57,13 @@ public class AttitudeEstimator : MonoBehaviour
         Init();
 
     }
-
+    public void Initialize(Transform reference, GyroSim gyroscope, AccSim acceleromter, MagSim magnetometer)
+    {
+        this.reference = reference;
+        this.gyroscope = gyroscope;
+        this.acceleromter = acceleromter;
+        this.magnetometer = magnetometer;
+    }
 
     public virtual void Init(){
     }
@@ -98,6 +104,7 @@ public class AttitudeEstimator : MonoBehaviour
         }
 
     }
+    
 
     public float RotationMatchTimeIndicator(){
         //return 100f * rotationMatchTime / Time.time;
