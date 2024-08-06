@@ -78,7 +78,7 @@ public class AttitudeEstimator : MonoBehaviour
 
         magneticField = magnetometer.Read().normalized;
 
-        UpdateOrientation();
+        //UpdateOrientation();
         if(renderer!=null)
             Verify();
 

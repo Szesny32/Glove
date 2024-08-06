@@ -13,9 +13,10 @@ public class Complementary  : AttitudeEstimator{
     public float alpha = 0.98f;
     public ComplementaryType type;
 
+    Quaternion state; 
 
     public override void Init(){
-        transform.rotation = reference.rotation;
+        state = transform.rotation = reference.rotation;
     }
     public override void UpdateOrientation(){
 
@@ -23,10 +24,10 @@ public class Complementary  : AttitudeEstimator{
         Quaternion q2 = _eCompass();
 
         if(type == ComplementaryType.SLEPR){
-            transform.rotation = Quaternion.Slerp(q1, q2, 1-alpha);
+            transform.rotation = state =Quaternion.Slerp(q1, q2, 1-alpha);
         } 
         else if(type == ComplementaryType.NORMAL){
-            transform.rotation = new Quaternion(
+            transform.rotation = state = new Quaternion(
                 alpha*q1.x + (1-alpha)*q2.x,
                 alpha*q1.y + (1-alpha)*q2.y,
                 alpha*q1.z + (1-alpha)*q2.z,
@@ -38,7 +39,7 @@ public class Complementary  : AttitudeEstimator{
     private Quaternion _AngularRate(){
         Vector3 angularRate = angularVelocity * Time.deltaTime;
         Quaternion dQ = Quaternion.AngleAxis(angularRate.magnitude * Mathf.Rad2Deg, angularVelocity.normalized);
-        Quaternion q = transform.rotation * dQ;
+        Quaternion q = state * dQ;
         return q; 
     }
 
