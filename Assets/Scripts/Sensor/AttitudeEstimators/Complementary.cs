@@ -13,6 +13,10 @@ public class Complementary  : AttitudeEstimator{
     public float alpha = 0.98f;
     public ComplementaryType type;
 
+
+    public override void Init(){
+        transform.rotation = reference.rotation;
+    }
     public override void UpdateOrientation(){
 
         Quaternion q1 = _AngularRate();

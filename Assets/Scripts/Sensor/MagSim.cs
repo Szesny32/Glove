@@ -65,7 +65,8 @@ public class MagSim : MonoBehaviour
 
 
         //magneticPole = yRot(transform.rotation.eulerAngles.y, xRot(transform.rotation.eulerAngles.x, zRot(transform.rotation.eulerAngles.z, origin)));
-        UI.text = $"Magnetometer: {magneticPole }[μT]";
+        if(UI != null)
+            UI.text = $"Magnetometer: {magneticPole }[μT]";
     }
 
     public Vector3 Read(){

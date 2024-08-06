@@ -41,7 +41,8 @@ public class AttitudeEstimator : MonoBehaviour
         incorrectMaterial = Resources.Load<Material>("Incorrect");
 
         renderer = GetComponent<Renderer>();
-        renderer.material = incorrectMaterial;
+        if(renderer!=null)
+            renderer.material = incorrectMaterial;
         gyroscopeBias = removeBiasMode? gyroscope.GetBias() : Vector3.zero;
         acceleromterBias = removeBiasMode? acceleromter.GetBias() : Vector3.zero;
         transform.rotation = reference.rotation;
@@ -72,7 +73,8 @@ public class AttitudeEstimator : MonoBehaviour
         magneticField = magnetometer.Read().normalized;
 
         UpdateOrientation();
-        Verify();
+        if(renderer!=null)
+            Verify();
 
     }
 

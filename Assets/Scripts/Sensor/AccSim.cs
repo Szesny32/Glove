@@ -50,8 +50,8 @@ public class AccSim : MonoBehaviour
         if(isBias){
             acceleration += bias;
         }
-
-        UI.text = $"Accelerometer: {acceleration} [m/s²]";
+        if(UI != null)
+            UI.text = $"Accelerometer: {acceleration} [m/s²]";
     }
 
     public Vector3 Read(){

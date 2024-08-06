@@ -52,7 +52,9 @@ public class GyroSim : MonoBehaviour{
         }
 
         qPrev  = transform.rotation;
-        UI.text = $"Gyroscope: {angularVelocity} [rad/s]";
+        
+        if(UI != null)
+            UI.text = $"Gyroscope: {angularVelocity} [rad/s]";
     }
 
     public Vector3 GetBias(){
