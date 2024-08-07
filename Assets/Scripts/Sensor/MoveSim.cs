@@ -5,7 +5,7 @@ using UnityEngine;
 public class MoveSim : MonoBehaviour
 {
     public float rotationSpeedDegreesPerSecond = 30f; 
-    private float timer = 5f;
+    private float timer = 1f;
     private float clock;
 
 
