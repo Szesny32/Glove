@@ -46,6 +46,8 @@ public class TextManager : MonoBehaviour
             obj.transform.Rotate(Vector3.up * 180f); 
 
         }
+
+
     }
     
 
@@ -58,6 +60,7 @@ public class TextManager : MonoBehaviour
             float diff = objects[i].angleDifferenceTotal/Time.frameCount;
             labels[i].text = $"{objects[i].gameObject.name} \n{t:F2}s [{100*t/Time.time:F2}%]\n{diff:F2}"; 
         }
+
     }
 }
 

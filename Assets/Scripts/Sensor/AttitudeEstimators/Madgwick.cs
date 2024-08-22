@@ -24,8 +24,8 @@ public class Madgwick : AttitudeEstimator
     _Quaternion Q;
     //estimated mean zero gyroscope measurement error of each axis
 
-    //float beta;  //TODO
-    _Matrix beta;
+    float beta;  //TODO
+    //_Matrix beta;
 
 
     public override void Init(){
@@ -37,21 +37,16 @@ public class Madgwick : AttitudeEstimator
         float ey = Mathf.Sqrt(gyroscopeNoise.y);
         float ez = Mathf.Sqrt(gyroscopeNoise.z);
 
-        //TODO
-        // beta = Mathf.Sqrt(0.75f) * new _Matrix(new float[,]{
-        //     {1, 0, 0, 0},
+        float omega_beta = Mathf.Sqrt(gyroscopeNoise.x + gyroscopeNoise.y + gyroscopeNoise.z);
+        beta = Mathf.Sqrt(3f / 4f) * omega_beta;
+
+        //LEPSZY BEZ SZUMU
+        //  beta = Mathf.Sqrt(0.75f) * new _Matrix(new float[,]{
+        //     {Mathf.Sqrt(gyroscopeNoise.x + gyroscopeNoise.y + gyroscopeNoise.z), 0, 0, 0},
         //     {0, ex, 0, 0},
         //     {0, 0, ey, 0},
         //     {0, 0, 0, ez}
         // });
-
-        //LEPSZY BEZ SZUMU
-         beta = Mathf.Sqrt(0.75f) * new _Matrix(new float[,]{
-            {Mathf.Sqrt(gyroscopeNoise.x + gyroscopeNoise.y + gyroscopeNoise.z), 0, 0, 0},
-            {0, ex, 0, 0},
-            {0, 0, ey, 0},
-            {0, 0, 0, ez}
-        });
 
        
 

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using System.Diagnostics;
 
 public class AttitudeEstimator : MonoBehaviour
 {
@@ -25,6 +27,9 @@ public class AttitudeEstimator : MonoBehaviour
     private Material incorrectMaterial;
 
     public float angleDifference;
+    public float smoothingAngle;
+    protected Quaternion prevRot;
+
     public float angleDifferenceTotal = 0f;
     private float angleThreshold = 10f;
     protected bool rotationMatch = false;
@@ -33,6 +38,10 @@ public class AttitudeEstimator : MonoBehaviour
     public bool removeBiasMode = false;
 
     public bool autoMode = true;
+
+    protected float dt = 0f;
+
+    public float updateDuration = 0f;
 
 
     
@@ -58,6 +67,8 @@ public class AttitudeEstimator : MonoBehaviour
 
         Init();
 
+        
+
     }
     public void Initialize(Transform reference, GyroSim gyroscope, AccSim acceleromter, MagSim magnetometer, bool autoMode)
     {
@@ -66,13 +77,21 @@ public class AttitudeEstimator : MonoBehaviour
         this.acceleromter = acceleromter;
         this.magnetometer = magnetometer;
         this.autoMode = autoMode;
+        Init();
     }
 
     public virtual void Init(){
     }
 
+    public virtual Quaternion GetState(){
+        return new Quaternion(0, 0, 0, 1);
+    }
+
     void Update()
     {
+
+        //dt = Time.fixedDeltaTime;
+        dt = Time.deltaTime;
         Vector3 bias = removeBiasMode? gyroscopeBias : Vector3.zero;
         angularVelocity = gyroscope.Read() - bias;
 
@@ -80,10 +99,13 @@ public class AttitudeEstimator : MonoBehaviour
         acceleration = (acceleromter.Read() - bias).normalized;
 
         magneticField = magnetometer.Read().normalized;
-
-        if(autoMode)
+        prevRot = transform.rotation;
+        if(autoMode){
+            
+            float start = Time.realtimeSinceStartup;
             UpdateOrientation();
-
+            updateDuration = Time.realtimeSinceStartup - start;
+        }
         if(renderer!=null)
             Verify();
 
@@ -96,6 +118,7 @@ public class AttitudeEstimator : MonoBehaviour
 
     void Verify(){
         angleDifference = Quaternion.Angle(reference.rotation, transform.rotation);
+        smoothingAngle = Quaternion.Angle(prevRot, transform.rotation);
         angleDifferenceTotal +=angleDifference;
         if (angleDifference <= angleThreshold && !rotationMatch) {
             rotationMatch = true;
@@ -115,6 +138,7 @@ public class AttitudeEstimator : MonoBehaviour
         //return 100f * rotationMatchTime / Time.time;
         return rotationMatchTime;
     }
+
 
     public Vector3 zRot(float angle, Vector3 v){
         float sinZ = Mathf.Sin(angle);

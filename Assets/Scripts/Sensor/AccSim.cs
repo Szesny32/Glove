@@ -35,7 +35,9 @@ public class AccSim : MonoBehaviour
             2f*(q.y*q.z - q.x*q.w)
         ) * g;
         //acceleration_gt = acceleration = zRot(-q.eulerAngles.x ,xRot(-q.eulerAngles.x, yRot(-q.eulerAngles.y, Vector3.up))) * g;
-       
+       string log = $"q: {q} \n\n\nacceleration_gt: {acceleration_gt}";
+        if (log.Contains("NaN"))
+            Debug.Log($"log: {log}");
 
 
 

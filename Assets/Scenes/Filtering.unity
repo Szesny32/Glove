@@ -406,8 +406,11 @@ MonoBehaviour:
   magnetometer: {fileID: 1935980347}
   magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
+  smoothingAngle: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
+  autoMode: 1
+  updateDuration: 0
   type: 0
   Taylor_K_Order: 1
 --- !u!1 &227898834 stripped
@@ -435,8 +438,11 @@ MonoBehaviour:
   magnetometer: {fileID: 1935980347}
   magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
+  smoothingAngle: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
+  autoMode: 1
+  updateDuration: 0
 --- !u!1001 &353676431
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -507,6 +513,7 @@ GameObject:
   m_Component:
   - component: {fileID: 407006265}
   - component: {fileID: 407006264}
+  - component: {fileID: 407006266}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -542,6 +549,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &407006266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407006263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08e0a25f69809e34991979b90c04dbb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logToFile: 1
+  c96: {fileID: 729146144}
+  EKF: {fileID: 227898835}
+  UKF: {fileID: 906628434}
+  Madgwick: {fileID: 631984642}
 --- !u!1 &420802851
 GameObject:
   m_ObjectHideFlags: 0
@@ -701,8 +725,11 @@ MonoBehaviour:
   magnetometer: {fileID: 1935980347}
   magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
+  smoothingAngle: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
+  autoMode: 1
+  updateDuration: 0
   type: 1
   Taylor_K_Order: 1
 --- !u!1001 &606434039
@@ -761,9 +788,6 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1935980356}
     - targetCorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1935980345}
@@ -866,8 +890,11 @@ MonoBehaviour:
   magnetometer: {fileID: 1935980347}
   magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
+  smoothingAngle: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
+  autoMode: 1
+  updateDuration: 0
 --- !u!1 &631984636 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1300689381462198, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
@@ -893,8 +920,11 @@ MonoBehaviour:
   magnetometer: {fileID: 1935980347}
   magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
+  smoothingAngle: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
+  autoMode: 1
+  updateDuration: 0
 --- !u!1001 &636780799
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -980,8 +1010,11 @@ MonoBehaviour:
   magnetometer: {fileID: 1935980347}
   magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
+  smoothingAngle: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
+  autoMode: 1
+  updateDuration: 0
   alpha: 0.98
   type: 0
 --- !u!1 &729146139 stripped
@@ -1009,9 +1042,12 @@ MonoBehaviour:
   magnetometer: {fileID: 1935980347}
   magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
+  smoothingAngle: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
-  alpha: 0.98
+  autoMode: 1
+  updateDuration: 0
+  alpha: 0.96
   type: 1
 --- !u!1001 &742796004
 PrefabInstance:
@@ -1166,8 +1202,11 @@ MonoBehaviour:
   magnetometer: {fileID: 1935980347}
   magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
+  smoothingAngle: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
+  autoMode: 1
+  updateDuration: 0
 --- !u!1 &938265368
 GameObject:
   m_ObjectHideFlags: 0
@@ -1447,8 +1486,11 @@ MonoBehaviour:
   magnetometer: {fileID: 1935980347}
   magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
+  smoothingAngle: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
+  autoMode: 1
+  updateDuration: 0
 --- !u!1001 &1587318993
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1689,7 +1731,7 @@ Transform:
   m_GameObject: {fileID: 1854054745}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.9914449, z: -0.13052616, w: 0}
-  m_LocalPosition: {x: 19.34, y: 6.47, z: 51.87}
+  m_LocalPosition: {x: 19.34, y: 6.47, z: 61.61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1716,7 +1758,7 @@ MonoBehaviour:
   noisy: 1
   isBias: 0
   bias: {x: 0.014, y: 0.072, z: 0.00026}
-  noise: {x: 0.48, y: 0.78, z: 0.67}
+  noise: {x: 0.547, y: 0.212, z: 0.971}
 --- !u!114 &1935980345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1747,7 +1789,7 @@ MonoBehaviour:
   noisy: 1
   isBias: 0
   bias: {x: 0.15, y: 0.15, z: -0.25}
-  noise: {x: 0.42, y: 0.36, z: 0.15}
+  noise: {x: 0.412, y: 0.673, z: 0.878}
 --- !u!114 &1935980347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1761,29 +1803,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noisy: 1
-  noise: {x: 1, y: 0.5, z: 1.12}
+  noise: {x: 0.1, y: 0.58, z: 0.912}
   UI: {fileID: 2083590878}
 --- !u!4 &1935980352 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4194827560693120, guid: bbea6872df405a045862b0d1f277c5ac, type: 3}
   m_PrefabInstance: {fileID: 606434039}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1935980356
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1935980339}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08e0a25f69809e34991979b90c04dbb0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gyroscope: {fileID: 1935980340}
-  accelerometer: {fileID: 1935980346}
-  magnetometer: {fileID: 1935980347}
-  logToFile: 0
 --- !u!1 &1971547372
 GameObject:
   m_ObjectHideFlags: 0
@@ -1974,8 +2000,11 @@ MonoBehaviour:
   magnetometer: {fileID: 1935980347}
   magnetometerNoise: {x: 0, y: 0, z: 0}
   angleDifference: 0
+  smoothingAngle: 0
   angleDifferenceTotal: 0
   removeBiasMode: 0
+  autoMode: 1
+  updateDuration: 0
 --- !u!1 &2083590876
 GameObject:
   m_ObjectHideFlags: 0

@@ -38,7 +38,7 @@ public class EKF : AttitudeEstimator
         acceleromterNoise /= 9.8067f;
         magnetometerNoise  /= 50.06349f; 
             
-        state = new _Quaternion(transform.rotation);
+        state = new _Quaternion(reference.rotation);
         P = ProcessNoiseCovarianceMatrix(gyroscopeNoise, state, Time.deltaTime);
 
             R = new _Matrix( new float[,]{
@@ -49,6 +49,10 @@ public class EKF : AttitudeEstimator
             {0, 0, 0, 0, magnetometerNoise.y, 0},
             {0, 0, 0, 0, 0, magnetometerNoise.z}
         });
+    }
+
+    public override Quaternion GetState(){
+        return state.Unity();
     }
 
     public override void UpdateOrientation(){
@@ -70,7 +74,6 @@ public class EKF : AttitudeEstimator
     }
 
     private void PredictionStep(){
-        float dt = Time.deltaTime;
         state_predicted = f(state, angularVelocity, dt).normalized;
 
         _Matrix F = FJacobian(angularVelocity, dt);
